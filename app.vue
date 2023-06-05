@@ -1,5 +1,6 @@
 <template>
   <div>
-    bonjour arthur
+    bonjour arthur !!!
+    coucou Damien
   </div>
 </template>
