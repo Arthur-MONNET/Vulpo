@@ -1,6 +1,15 @@
 <template>
   <div>
-    bonjour arthur !!!
-    coucou Damien
+    <NuxtLayout>
+      <NuxtPage/>
+    </NuxtLayout>
   </div>
 </template>
+
+<style>
+
+</style>
+
+<script setup>
+  
+</script>
