@@ -1,23 +1,19 @@
 // nuxt 3
 
 <template>
-  <div>
+  <div id="index-page">
     <Map />
     <OpenPopupButton popup="Menu" i="bars" />
     <GoToButton page="search" i="search" />
     <ButtonFocusUser b="28" l="4" />
-    <Footer>
-      <BgFooter />
-      <ContentFooter />
-    </Footer>
+    <MapFooter />
     <ReportingPopup />
     <MenuPopup />
   </div>
 </template>
 
 <style scoped>
-
-div {
+#index-page {
   width: 100%;
   height: 100vh;
   position: relative;
@@ -25,6 +21,5 @@ div {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: red;
 }
 </style>    
