@@ -26,7 +26,16 @@ export const useUserStore = defineStore({
             this.marker = new mapboxgl.Marker(el)
                 .setLngLat(this.getLocationAsArray)
                 .addTo(map);
+            this.marker
+                .getElement()
+                .addEventListener("click", () => this.focusOnUser(map));
         },
+        focusOnUser(map: any) {
+            map.flyTo({
+                center: this.getLocationAsArray,
+                zoom: 14,
+            });
+        }
     },
     getters: {
         getLocation: state => state.location,

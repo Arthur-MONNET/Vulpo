@@ -93,7 +93,7 @@ const waitForGeolocation = () => {
 
 .alert-marker {
   width: 35px;
-  height: 110px;
+  height: 57px;
   padding-bottom: 50px;
   z-index: 20;
   display: flex;

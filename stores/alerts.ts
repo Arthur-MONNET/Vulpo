@@ -128,6 +128,8 @@ export const useAlertsStore = defineStore({
                 this.alertsMarker.push(new mapboxgl.Marker(el)
                     .setLngLat([this.alerts[i].longitude, this.alerts[i].latitude])
                     .addTo(map));
+                this.alertsMarker[i].getElement().querySelector("i").addEventListener("click", () => this.focusOnAlert(map, this.alerts[i]));
+                this.alertsMarker[i].getElement().querySelector("svg").addEventListener("click", () => this.focusOnAlert(map, this.alerts[i]));
             }
         },
         generateHtmlMarker(alert: any) {
@@ -157,10 +159,17 @@ export const useAlertsStore = defineStore({
                 '<path d="M1.61776 13.049H12.6125C13.0145 13.049 13.3748 13.3017 13.5001 13.6782L17.2537 26.5822C17.4156 27.1393 18.2143 27.1393 18.3762 26.5822L22.1299 13.6782C22.2551 13.3017 22.6154 13.049 23.0174 13.049H33.3909C34.4872 13.049 35.2651 11.9866 34.9153 10.9602L31.4331 0.634932C31.2556 0.103711 30.6344 -0.149004 30.1279 0.0985553L26.0819 2.0945C23.4194 3.40966 20.4801 4.09561 17.4991 4.09561C14.5181 4.09561 11.5841 3.40966 8.91629 2.0945L4.87025 0.0985553C4.36385 -0.154162 3.74258 0.0985538 3.56508 0.634932L0.0828799 10.9602C-0.261686 11.9866 0.510976 13.049 1.60732 13.049H1.61776Z" fill="white"/>' +
                 "</svg>";
             return el;
+        },
+        focusOnAlert(map: any, alert: any) {
+            map.flyTo({
+                center: this.getAlertPositionAsArray(alert),
+                zoom: 14,
+            });
         }
     },
     getters: {
         getAlerts: state => state.alerts,
+        getAlertPositionAsArray: state => (alert: any) => [alert.longitude, alert.latitude],
         getCategories: state => state.categories,
         getAlertUI: state => (type: any) => {
             for (let i = 0; i < state.categories.length; i++) {
