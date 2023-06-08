@@ -21,6 +21,8 @@ onMounted(async () => {
   // set alerts on map
 
   alertsStore.$subscribe((mutations, state) => {
+    if(alertsStore.getMarkers) if(alertsStore.getAlerts.length === alertsStore.getMarkers.length) return;
+    console.log('generate markers')
     alertsStore.clearMarkers();
     alertsStore.generateMarkers($mapboxgl, map);
   });

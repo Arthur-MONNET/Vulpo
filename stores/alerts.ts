@@ -172,6 +172,6 @@ export const useAlertsStore = defineStore({
             }
         },
         getCategoryUI: state => (category: any) => state.categories.find((cat: any) => cat.id === category),
-        getAlertsHtml: state => state.alertsHtml,
+        getMarkers: state => state.alertsMarker,
     },
 });
