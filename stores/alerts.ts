@@ -6,7 +6,6 @@ export const useAlertsStore = defineStore({
     state: () => {
         return {
             alerts: [] as any[],
-            alertsMarker: [] as any[],
             categories: [
                 {
                     id: 1,
@@ -14,7 +13,7 @@ export const useAlertsStore = defineStore({
                     icon: "fas fa-star",
                     // couleur correspondant à la catégorie ( pastel)
                     color: "#D9D9FF",
-                    signalements: [
+                    reportings: [
                         { id: 1, title: "Point de vue", icon: "fas fa-eye" },
                         { id: 2, title: "Sommet", icon: "fas fa-mountain" },
                         { id: 3, title: "Campement", icon: "fas fa-campground" },
@@ -27,7 +26,7 @@ export const useAlertsStore = defineStore({
                     title: "Obstacle",
                     icon: "fas fa-exclamation-triangle",
                     color: "#FFD9B3",
-                    signalements: [
+                    reportings: [
                         { id: 6, title: "Eboulement", icon: "fas fa-mountain" },
                         { id: 7, title: "Avalanche", icon: "fas fa-snowflake" },
                         { id: 8, title: "Inondation", icon: "fas fa-water" },
@@ -40,7 +39,7 @@ export const useAlertsStore = defineStore({
                     title: "Zone sensible",
                     icon: "fas fa-exclamation",
                     color: "#FFB3B3",
-                    signalements: [
+                    reportings: [
                         { id: 11, title: "Travaux", icon: "fas fa-tools" },
                         { id: 12, title: "Zone de reproduction", icon: "fas fa-egg" },
                         { id: 13, title: "Zone de nidification", icon: "fas fa-feather" },
@@ -52,7 +51,7 @@ export const useAlertsStore = defineStore({
                     title: "Danger",
                     icon: "fas fa-skull-crossbones",
                     color: "#FFB3FF",
-                    signalements: [
+                    reportings: [
                         { id: 15, title: "Abattage", icon: "fas fa-tree" },
                         { id: 16, title: "Animal sauvage", icon: "fas fa-paw" },
                         { id: 17, title: "Incendie", icon: "fas fa-fire" },
@@ -66,7 +65,7 @@ export const useAlertsStore = defineStore({
                     title: "Animal",
                     icon: "fas fa-paw",
                     color: "#B3FFB3",
-                    signalements: [
+                    reportings: [
                         { id: 21, title: "Animal blessé", icon: "fas fa-first-aid" },
                         { id: 22, title: "Animal mort", icon: "fas fa-skull" },
                         { id: 23, title: "Animal en détresse", icon: "fas fa-sad-tear" },
@@ -80,7 +79,7 @@ export const useAlertsStore = defineStore({
                     title: "Pollution",
                     icon: "fas fa-trash-alt",
                     color: "#B3B3FF",
-                    signalements: [
+                    reportings: [
                         { id: 27, title: "Liquide", icon: "fas fa-tint" },
                         { id: 28, title: "Encombrant", icon: "fas fa-couch" },
                         { id: 29, title: "Déchet", icon: "fas fa-trash-alt" },
@@ -88,6 +87,7 @@ export const useAlertsStore = defineStore({
                     ],
                 },
             ],
+            selectCategory: null as any,
         }
     },
     actions: {
@@ -116,21 +116,11 @@ export const useAlertsStore = defineStore({
                     break;
             }
         },
-        clearMarkers() {
-            for (let i = 0; i < this.alertsMarker.length; i++) {
-                this.alertsMarker[i].remove();
-            }
+        setSelectCategory(category: any) {
+            this.selectCategory = category;
         },
-        generateMarkers(mapboxgl: any, map: any) {
-            this.alertsMarker = [];
-            for (let i = 0; i < this.alerts.length; i++) {
-                const el = this.generateHtmlMarker(this.alerts[i]);
-                this.alertsMarker.push(new mapboxgl.Marker(el)
-                    .setLngLat([this.alerts[i].longitude, this.alerts[i].latitude])
-                    .addTo(map));
-                this.alertsMarker[i].getElement().querySelector("i").addEventListener("click", () => this.focusOnAlert(map, this.alerts[i]));
-                this.alertsMarker[i].getElement().querySelector("svg").addEventListener("click", () => this.focusOnAlert(map, this.alerts[i]));
-            }
+        setUnselectCategory() {
+            this.selectCategory = null;
         },
         generateHtmlMarker(alert: any) {
             const el = document.createElement("div");
@@ -160,12 +150,6 @@ export const useAlertsStore = defineStore({
                 "</svg>";
             return el;
         },
-        focusOnAlert(map: any, alert: any) {
-            map.flyTo({
-                center: this.getAlertPositionAsArray(alert),
-                zoom: 14,
-            });
-        }
     },
     getters: {
         getAlerts: state => state.alerts,
@@ -173,14 +157,15 @@ export const useAlertsStore = defineStore({
         getCategories: state => state.categories,
         getAlertUI: state => (type: any) => {
             for (let i = 0; i < state.categories.length; i++) {
-                for (let j = 0; j < state.categories[i].signalements.length; j++) {
-                    if (state.categories[i].signalements[j].id === type) {
-                        return state.categories[i].signalements[j];
+                for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                    if (state.categories[i].reportings[j].id === type) {
+                        return state.categories[i].reportings[j];
                     }
                 }
             }
         },
         getCategoryUI: state => (category: any) => state.categories.find((cat: any) => cat.id === category),
-        getMarkers: state => state.alertsMarker,
+        getSelectCategory: state => state.selectCategory,
+        categoryIsSelected: state => !!state.selectCategory,
     },
 });

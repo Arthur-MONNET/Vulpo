@@ -17,25 +17,11 @@ export const useUserStore = defineStore({
         setLocation(location: any) {
             this.location = location;
         },
-        generateMarker(mapboxgl: any, map: any) {
-            this.marker?.remove();
-
+        generateHtmlMarker() {
             const el = document.createElement("div");
             el.className = "user-marker";
-
-            this.marker = new mapboxgl.Marker(el)
-                .setLngLat(this.getLocationAsArray)
-                .addTo(map);
-            this.marker
-                .getElement()
-                .addEventListener("click", () => this.focusOnUser(map));
+            return el;
         },
-        focusOnUser(map: any) {
-            map.flyTo({
-                center: this.getLocationAsArray,
-                zoom: 14,
-            });
-        }
     },
     getters: {
         getLocation: state => state.location,

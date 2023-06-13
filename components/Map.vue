@@ -7,26 +7,34 @@
 <script setup>
 import { useUserStore } from "../stores/user";
 import { useAlertsStore } from "../stores/alerts";
+import { useMapStore } from "../stores/map";
 const alertsStore = useAlertsStore();
 const userStore = useUserStore();
-console.log(userStore)
+const mapStore = useMapStore();
 onMounted(async () => {
   const { $mapboxgl } = useNuxtApp();
-  const map = new $mapboxgl.Map({
-    container: "map-container",
-    style: "mapbox://styles/zak74/clijz8k4j00do01pfe4jv1cn4",
-    zoom: 12,
-  });
+  mapStore.setMapboxgl($mapboxgl);
+  const map = mapStore.setMap(
+    "map-container",
+    "mapbox://styles/zak74/clijz8k4j00do01pfe4jv1cn4",
+    12
+  );
 
   // set alerts on map
 
   alertsStore.$subscribe((mutations, state) => {
-    if(alertsStore.getMarkers) if(alertsStore.getAlerts.length === alertsStore.getMarkers.length) return;
-    console.log('generate markers')
-    alertsStore.clearMarkers();
-    alertsStore.generateMarkers($mapboxgl, map);
+    if (alertsStore.getAlerts.length > 0) return;
+    if (alertsStore.getAlerts.length === mapStore.getMarkers.length - 1) return;
+    console.log("generate markers");
+    for (const alert of alertsStore.getAlerts) {
+      if (mapStore.findMarker(alert.id)) return;
+      mapStore.addMarker(
+        alert.id,
+        alertsStore.getAlertPositionAsArray(alert),
+        alertsStore.generateHtmlMarker(alert)
+      );
+    }
   });
-
   await waitForGeolocation();
   navigator.geolocation.getCurrentPosition((position) => {
     userStore.setLocation({
@@ -34,12 +42,17 @@ onMounted(async () => {
       lng: position.coords.longitude,
     });
     map.setCenter(userStore.getLocationAsArray);
-    map.flyTo({
-      center: userStore.getLocationAsArray,
-      zoom: 14,
-    });
+    if(mapStore.findMarker("user")) mapStore.removeMarker("user");
+    mapStore.addMarker(
+      "user",
+      userStore.getLocationAsArray,
+      userStore.generateHtmlMarker()
+    );
+    mapStore.focusOnByName("user", 14);
+  });
 
-    userStore.generateMarker($mapboxgl, map);
+  map.on("move", () => {
+    mapStore.setIsUserMarkerCentered()
   });
 });
 
@@ -48,13 +61,15 @@ const waitForGeolocation = () => {
     navigator.geolocation.getCurrentPosition(resolve, reject);
   });
 };
+
+
 </script>
 
 <style scoped>
 #map-container {
   width: 100%;
-  height: calc(100vh + 100px);
-  margin: -60px 0 -40px;
+  height: calc(100vh + 160px);
+  margin: -100px 0 -60px;
 }
 </style>
 

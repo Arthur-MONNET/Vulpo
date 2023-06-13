@@ -3,14 +3,19 @@
 <template>
   <div id="index-page">
     <Map />
-    <OpenPopupButton popup="Menu" i="bars" />
-    <GoToButton page="search" i="search" />
-    <ButtonFocusUser b="28" l="4" />
+    <Button event="OPEN_POPUP" target="Menu" i="bars" iType="solid" styleTailwind="absolute top-4 left-4 text-gray-700 bg-white h-12 w-12 rounded-full" />
+    <Button event="GO_TO" target="search" i="search" iType="solid" styleTailwind="absolute top-4 right-4 text-gray-700 bg-white h-12 w-12 rounded-full" />
+    <Button event="FOCUS_ON" target="user" i="location-crosshairs" iType="solid" styleTailwind="absolute bottom-32 left-4 z-10 text-gray-700 bg-white h-12 w-12 rounded-full" :class="mapStore.getIsUserMarkerCentered ? 'slide-in' : 'slide-out'" />
     <MapFooter />
     <ReportingPopup />
     <MenuPopup />
   </div>
 </template>
+
+<script setup>
+import { useMapStore } from "../stores/map"
+const mapStore = useMapStore();
+</script>
 
 <style scoped>
 #index-page {
@@ -22,4 +27,4 @@
   flex-direction: column;
   align-items: center;
 }
-</style>    
+</style>
