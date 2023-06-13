@@ -17,15 +17,18 @@ export const usePopupStore = defineStore({
             this.popups[popupName] = true;
         },
         closePopup(popupName: string) {
+            console.log("CLOSE POPUP : ", popupName)
             this.popups[popupName] = false;
         },
         closeAllPopups() {
-            Object.keys(this.popups).forEach(popupName => this.popups[popupName] = false);
+            Object.keys(this.popups).forEach(popupName => this.closePopup(popupName));
         },
         closeAllPopupsExcept(popupName: string) {
             Object.keys(this.popups).forEach(popup => {
                 console.log(popup, popupName)
-                if (popup !== popupName) this.popups[popup] = false;
+                if (popup !== popupName) {
+                    this.closePopup(popup)
+                }
             });
             console.log(this.isPopupOpen(popupName))
         }

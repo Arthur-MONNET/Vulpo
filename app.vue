@@ -68,6 +68,7 @@ function handleMessage({ data }) {
   const { type, payload } = JSON.parse(data);
   switch (type) {
     case "alerts":
+      console.log("alerts received");
       alertsStore.setAlerts(payload);
       alertsStore.sortAlerts("latitude");
       break;

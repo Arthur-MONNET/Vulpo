@@ -23,11 +23,13 @@ onMounted(async () => {
   // set alerts on map
 
   alertsStore.$subscribe((mutations, state) => {
-    if (alertsStore.getAlerts.length > 0) return;
+    console.log("alertsStore.$subscribe / ", alertsStore.getAlerts.length, mapStore.getMarkers.length - 1);
+    if (alertsStore.getAlerts.length < 1) return;
     if (alertsStore.getAlerts.length === mapStore.getMarkers.length - 1) return;
     console.log("generate markers");
     for (const alert of alertsStore.getAlerts) {
-      if (mapStore.findMarker(alert.id)) return;
+      console.log("find marker : ", alert.id, mapStore.findMarker(alert.id));
+      if (mapStore.findMarker(alert.id)) continue;
       mapStore.addMarker(
         alert.id,
         alertsStore.getAlertPositionAsArray(alert),
