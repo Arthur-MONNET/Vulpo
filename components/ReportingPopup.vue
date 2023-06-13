@@ -12,9 +12,11 @@
       <div class="reporting-popup-header-line"></div>
       <!-- le titre est soit "signalemnt" soit le nom de la catégorie selectionnée si il y en a une ( selectedCategory || "Signalement" )-->
       <h3 class="reporting-popup-header-title">
-        {{ alertsStore.getSelectCategory
-          ? alertsStore.getSelectCategory.title
-          : "Signalement" }}
+        {{
+          alertsStore.getSelectCategory
+            ? alertsStore.getSelectCategory.title
+            : "Signalement"
+        }}
       </h3>
     </div>
     <button
@@ -25,7 +27,10 @@
       <i class="fas fa-arrow-left"></i>
     </button>
     <div class="reporting-popup-content">
-      <div v-if="!alertsStore.categoryIsSelected" class="reporting-popup-categories">
+      <div
+        v-if="!alertsStore.categoryIsSelected"
+        class="reporting-popup-categories"
+      >
         <button
           v-for="category in alertsStore.getCategories"
           :key="category.id"
@@ -108,7 +113,7 @@ function sendAlert(reporting) {
   bottom: 0;
   left: 0;
   width: 100%;
-  min-height: 80%;
+  max-height: 100%;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   border-radius: 20px 20px 0 0;
@@ -146,6 +151,7 @@ function sendAlert(reporting) {
 .reporting-popup-categories,
 .reporting-popup-list {
   display: grid;
+  max-height: 100%;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 16px;
 }
@@ -170,6 +176,19 @@ function sendAlert(reporting) {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* change grid template columns to repeat(3, 1fr) if ratio is 650/379 */
+@media (min-aspect-ratio: 379/650) {
+  .reporting-popup-categories,
+  .reporting-popup-list {
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 8px;
+  }
+  .reporting-category-icon,
+  .reporting-item-icon {
+    font-size: 50px;
+  }
 }
 
 .reporting-category-title {
