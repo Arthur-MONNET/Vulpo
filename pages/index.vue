@@ -3,9 +3,28 @@
 <template>
   <div id="index-page">
     <Map :lng="route.query.lng || ''" :lat="route.query.lat || ''" />
-    <Button event="OPEN_POPUP" target="Menu" i="bars" iType="solid" styleTailwind="absolute top-4 left-4 text-gray-700 bg-white h-12 w-12 rounded-full" />
-    <Button event="GO_TO" target="search" i="search" iType="solid" styleTailwind="absolute top-4 right-4 text-gray-700 bg-white h-12 w-12 rounded-full" />
-    <Button event="FOCUS_ON" target="user" i="location-crosshairs" iType="solid" styleTailwind="fixed bottom-32 left-4 z-10 text-gray-700 bg-white h-12 w-12 rounded-full" :class="mapStore.getIsUserMarkerCentered ? 'slide-in' : 'slide-out'" />
+    <Button
+      event="OPEN_POPUP"
+      target="Menu"
+      i="bars"
+      iType="solid"
+      styleTailwind="absolute top-4 left-4 text-gray-700 bg-white h-12 w-12 rounded-full"
+    />
+    <Button
+      event="GO_TO"
+      target="search"
+      i="search"
+      iType="solid"
+      styleTailwind="absolute top-4 right-4 text-gray-700 bg-white h-12 w-12 rounded-full"
+    />
+    <Button
+      event="FOCUS_ON"
+      target="user"
+      i="location-crosshairs"
+      iType="solid"
+      styleTailwind="fixed bottom-32 left-4 z-10 text-gray-700 bg-white h-12 w-12 rounded-full"
+      :class="mapStore.getIsUserMarkerCentered ? 'slide-in' : 'slide-out'"
+    />
     <MapFooter />
     <ReportingPopup />
     <MenuPopup />
@@ -26,14 +45,12 @@ const alertsStore = useAlertsStore();
 
 onMounted(async () => {
   alertsStore.$subscribe(async (mutations, state) => {
-    alertsStore.sortAlerts("created_at");
-    for (const alert of alertsStore.getAlerts) {
+    for (const alert of alertsStore.getAndSortAlertsBy("created_at")) {
       if (!alertsStore.isRecent(alert)) break;
       if (!alertsStore.isAlreadyOpen(alert)) {
         popupStore.closePopup("Notification");
         await sleep(600);
         popupStore.openPopup("Notification", alert);
-        alertsStore.setAlertAsOpen(alert);
         break;
       }
     }

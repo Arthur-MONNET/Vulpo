@@ -61,7 +61,6 @@ function handleMessage({ data }) {
   switch (type) {
     case "alerts":
       alertsStore.setAlerts(payload);
-      alertsStore.sortAlerts("latitude");
       break;
     default:
       break;

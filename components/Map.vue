@@ -26,7 +26,6 @@ onMounted(async () => {
     "mapbox://styles/zak74/clijz8k4j00do01pfe4jv1cn4",
     12
   );
-  alertsStore.sortAlerts("latitude");
   createMarkers();
 
   // set alerts on map
@@ -67,7 +66,7 @@ const createMarkers = () => {
   console.log("create markers");
   if (alertsStore.getAlerts.length < 1) return;
   if (alertsStore.getAlerts.length === mapStore.getMarkers.length - 1) return;
-  for (const alert of alertsStore.getAlerts) {
+  for (const alert of alertsStore.getAndSortAlertsBy("latitude")) {
     if (mapStore.findMarker(alert.id)) continue;
     if (alert.status !== "marker") continue;
     mapStore.addMarker(

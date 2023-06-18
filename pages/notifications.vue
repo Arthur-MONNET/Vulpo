@@ -3,7 +3,7 @@
     <HeaderPage :title="'Notifications'" />
     <div class="notifications-list">
       <Notification
-        v-for="alert in alertsStore.getAlerts"
+        v-for="alert in alertsStore.getAndSortAlertsBy('created_at')"
         :key="alert.id"
         :icon="alertsStore.getAlertUI(alert.reporting).icon"
         :title="alertsStore.getAlertUI(alert.reporting).title"
@@ -24,7 +24,6 @@ const alertsStore = useAlertsStore();
 
 onMounted(async () => {
   alertsStore.$subscribe(async (mutations, state) => {
-    alertsStore.sortAlerts("created_at");
   });
 });
 </script>
@@ -48,5 +47,6 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  padding-bottom: 10rem;
 }
 </style>
