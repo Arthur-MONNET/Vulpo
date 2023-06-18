@@ -84,7 +84,6 @@ const userStore = useUserStore();
 popupStore.addPopup("Reporting");
 
 function sendAlert(reporting) {
-  console.log("send alert : ", reporting);
   // Envoyer l'alerte au serveur via WebSocket
   $ws.send(
     JSON.stringify({
@@ -92,11 +91,11 @@ function sendAlert(reporting) {
       type: "new-alert",
       payload: {
         category: alertsStore.getSelectCategory.id,
-        type: reporting.id,
+        reporting: reporting.id,
         latitude: userStore.getLocation.lat,
         longitude: userStore.getLocation.lng,
         user: 1,
-        create_at: new Date().toISOString(),
+        created_at: new Date().toISOString(),
       },
     })
   );

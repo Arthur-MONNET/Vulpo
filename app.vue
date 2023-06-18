@@ -43,23 +43,15 @@ onMounted(() => {
     // si oui, fermer toutes les popups exepté celle cliquée
     // si non, fermer toutes les popups
     for (const popupName in popupStore.popups) {
-      console.log("element cliqué : ", e.target);
-      console.log("popup : ", popupName);
-      console.log(
-        "popup parent : ",
-        e.target.closest(`[class*=${popupName.toLocaleLowerCase()}-popup]`)
-      );
       if (
         e.target.closest(`[class*=${popupName.toLocaleLowerCase()}-popup]`) ||
         (e.target.dataset.event === "OPEN_POPUP" &&
           e.target.dataset.target === popupName)
       ) {
-        console.log("close all popups except ", popupName);
         popupStore.closeAllPopupsExcept(popupName);
         return;
       }
     }
-    console.log("close all popups");
     popupStore.closeAllPopups();
   });
 });
@@ -68,7 +60,6 @@ function handleMessage({ data }) {
   const { type, payload } = JSON.parse(data);
   switch (type) {
     case "alerts":
-      console.log("alerts received");
       alertsStore.setAlerts(payload);
       alertsStore.sortAlerts("latitude");
       break;

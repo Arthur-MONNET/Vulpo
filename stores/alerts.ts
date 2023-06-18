@@ -1,4 +1,5 @@
 // store/alerts.ts
+import { stat } from "fs";
 import { defineStore } from "pinia";
 
 export const useAlertsStore = defineStore({
@@ -11,14 +12,13 @@ export const useAlertsStore = defineStore({
                     id: 1,
                     title: "Point d'intérêt",
                     icon: "fas fa-star",
-                    // couleur correspondant à la catégorie ( pastel)
                     color: "#D9D9FF",
                     reportings: [
-                        { id: 1, title: "Point de vue", icon: "fas fa-eye" },
-                        { id: 2, title: "Sommet", icon: "fas fa-mountain" },
-                        { id: 3, title: "Campement", icon: "fas fa-campground" },
-                        { id: 4, title: "Point Info", icon: "fas fa-info" },
-                        { id: 5, title: "Point d'intérêt", icon: "fas fa-star" },
+                        { id: 1, title: "Point de vue", icon: "fas fa-eye", duration: -1},
+                        { id: 2, title: "Sommet", icon: "fas fa-mountain", duration: -1},
+                        { id: 3, title: "Campement", icon: "fas fa-campground", duration: -1},
+                        { id: 4, title: "Point Info", icon: "fas fa-info", duration: -1},
+                        { id: 5, title: "Point d'intérêt", icon: "fas fa-star", duration: -1},
                     ],
                 },
                 {
@@ -27,11 +27,11 @@ export const useAlertsStore = defineStore({
                     icon: "fas fa-exclamation-triangle",
                     color: "#FFD9B3",
                     reportings: [
-                        { id: 6, title: "Eboulement", icon: "fas fa-mountain" },
-                        { id: 7, title: "Avalanche", icon: "fas fa-snowflake" },
-                        { id: 8, title: "Inondation", icon: "fas fa-water" },
-                        { id: 9, title: "Arbre", icon: "fas fa-tree" },
-                        { id: 10, title: "Obstacle", icon: "fas fa-exclamation-triangle" },
+                        { id: 6, title: "Eboulement", icon: "fas fa-mountain", duration: 5},
+                        { id: 7, title: "Avalanche", icon: "fas fa-snowflake", duration: 7},
+                        { id: 8, title: "Inondation", icon: "fas fa-water", duration: 6},
+                        { id: 9, title: "Arbre", icon: "fas fa-tree", duration: 3},
+                        { id: 10, title: "Obstacle", icon: "fas fa-exclamation-triangle", duration: 4},
                     ],
                 },
                 {
@@ -40,10 +40,10 @@ export const useAlertsStore = defineStore({
                     icon: "fas fa-exclamation",
                     color: "#FFB3B3",
                     reportings: [
-                        { id: 11, title: "Travaux", icon: "fas fa-tools" },
-                        { id: 12, title: "Zone de reproduction", icon: "fas fa-egg" },
-                        { id: 13, title: "Zone de nidification", icon: "fas fa-feather" },
-                        { id: 14, title: "Zone sensible", icon: "fas fa-exclamation" },
+                        { id: 11, title: "Travaux", icon: "fas fa-tools", duration: 5},
+                        { id: 12, title: "Zone de reproduction", icon: "fas fa-egg", duration: 10},
+                        { id: 13, title: "Zone de nidification", icon: "fas fa-feather", duration: 8},
+                        { id: 14, title: "Zone sensible", icon: "fas fa-exclamation", duration: 6},
                     ],
                 },
                 {
@@ -52,12 +52,12 @@ export const useAlertsStore = defineStore({
                     icon: "fas fa-skull-crossbones",
                     color: "#FFB3FF",
                     reportings: [
-                        { id: 15, title: "Abattage", icon: "fas fa-tree" },
-                        { id: 16, title: "Animal sauvage", icon: "fas fa-paw" },
-                        { id: 17, title: "Incendie", icon: "fas fa-fire" },
-                        { id: 18, title: "Nid insecte", icon: "fas fa-bug" },
-                        { id: 19, title: "Chasse", icon: "fas fa-hiking" },
-                        { id: 20, title: "Danger", icon: "fas fa-skull-crossbones" },
+                        { id: 15, title: "Abattage", icon: "fas fa-tree", duration: 3},
+                        { id: 16, title: "Animal sauvage", icon: "fas fa-paw", duration: 2},
+                        { id: 17, title: "Incendie", icon: "fas fa-fire", duration: 2},
+                        { id: 18, title: "Nid insecte", icon: "fas fa-bug", duration: 4},
+                        { id: 19, title: "Chasse", icon: "fas fa-hiking", duration: 1},
+                        { id: 20, title: "Danger", icon: "fas fa-skull-crossbones", duration: 5},
                     ],
                 },
                 {
@@ -66,12 +66,12 @@ export const useAlertsStore = defineStore({
                     icon: "fas fa-paw",
                     color: "#B3FFB3",
                     reportings: [
-                        { id: 21, title: "Animal blessé", icon: "fas fa-first-aid" },
-                        { id: 22, title: "Animal mort", icon: "fas fa-skull" },
-                        { id: 23, title: "Animal en détresse", icon: "fas fa-sad-tear" },
-                        { id: 24, title: "Chien", icon: "fas fa-dog" },
-                        { id: 25, title: "Chat", icon: "fas fa-cat" },
-                        { id: 26, title: "Animal", icon: "fas fa-paw" },
+                        { id: 21, title: "Animal blessé", icon: "fas fa-first-aid", duration: 1},
+                        { id: 22, title: "Animal mort", icon: "fas fa-skull", duration: 2},
+                        { id: 23, title: "Animal en détresse", icon: "fas fa-sad-tear", duration: 3},
+                        { id: 24, title: "Chien", icon: "fas fa-dog", duration: 2},
+                        { id: 25, title: "Chat", icon: "fas fa-cat", duration: 2},
+                        { id: 26, title: "Animal", icon: "fas fa-paw", duration: 2},
                     ],
                 },
                 {
@@ -80,10 +80,10 @@ export const useAlertsStore = defineStore({
                     icon: "fas fa-trash-alt",
                     color: "#B3B3FF",
                     reportings: [
-                        { id: 27, title: "Liquide", icon: "fas fa-tint" },
-                        { id: 28, title: "Encombrant", icon: "fas fa-couch" },
-                        { id: 29, title: "Déchet", icon: "fas fa-trash-alt" },
-                        { id: 30, title: "Décharge sauvage", icon: "fas fa-dumpster" },
+                        { id: 27, title: "Liquide", icon: "fas fa-tint", duration: 4},
+                        { id: 28, title: "Encombrant", icon: "fas fa-couch", duration: 6},
+                        { id: 29, title: "Déchet", icon: "fas fa-trash-alt", duration: 3},
+                        { id: 30, title: "Décharge sauvage", icon: "fas fa-dumpster", duration: 7},
                     ],
                 },
             ],
@@ -91,16 +91,22 @@ export const useAlertsStore = defineStore({
         }
     },
     actions: {
-        addAlert(category: any, type: any, user: any, longitude: any, latitude: any) {
+        addAlert(category: any, reporting: any, user: any, longitude: any, latitude: any, isOpened = true) {
+            if(category == 1) isOpened = true;
             this.alerts.push({
                 category: category,
-                type: type,
+                reporting: reporting,
                 user: user,
                 longitude: longitude,
                 latitude: latitude,
+                isOpened: isOpened,
             });
         },
         setAlerts(alerts: any[]) {
+            for (let i = 0; i < alerts.length; i++) {
+                if(alerts[i].category == 1) alerts[i].isOpened = true;
+                else alerts[i].isOpened = false;
+            }
             this.alerts = alerts
         },
         sortAlerts(prop: string) {
@@ -128,7 +134,7 @@ export const useAlertsStore = defineStore({
 
             const icon = document.createElement("i");
             const categoryUI = this.getCategoryUI(alert.category);
-            const signalementUI = this.getAlertUI(alert.type);
+            const signalementUI = this.getAlertUI(alert.reporting);
 
             if (signalementUI) icon.className = signalementUI.icon;
             if (categoryUI) icon.style.backgroundColor = categoryUI.color;
@@ -150,15 +156,51 @@ export const useAlertsStore = defineStore({
                 "</svg>";
             return el;
         },
+        setAlertAsOpen(alert: any) {
+            alert.isOpened = true;
+        }
     },
     getters: {
-        getAlerts: state => state.alerts,
-        getAlertPositionAsArray: state => (alert: any) => [alert.longitude, alert.latitude],
-        getCategories: state => state.categories,
-        getAlertUI: state => (type: any) => {
+        getAlerts: state => state.alerts.filter((alert: any) => {
+            // return true if alert is not expired
+            const now = new Date();
+            const alertDate = new Date(alert.created_at);
+            const diff = Math.abs(now.getTime() - alertDate.getTime());
+            const diffDays = Math.floor(diff / (1000 * 3600 * 24));
+            let duration = 0;
             for (let i = 0; i < state.categories.length; i++) {
                 for (let j = 0; j < state.categories[i].reportings.length; j++) {
-                    if (state.categories[i].reportings[j].id === type) {
+                    if (state.categories[i].reportings[j].id === alert.reporting) {
+                        duration = state.categories[i].reportings[j].duration;
+                    }
+                }
+            }
+            if(duration === -1) return true;
+            return diffDays < duration;
+        }),
+        getUnreadAlerts: state => state.alerts.filter((alert: any) => {
+            // return true if alert is not expired
+            const now = new Date();
+            const alertDate = new Date(alert.created_at);
+            const diff = Math.abs(now.getTime() - alertDate.getTime());
+            const diffDays = Math.floor(diff / (1000 * 3600 * 24));
+            let duration = 0;
+            for (let i = 0; i < state.categories.length; i++) {
+                for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                    if (state.categories[i].reportings[j].id === alert.reporting) {
+                        duration = state.categories[i].reportings[j].duration;
+                    }
+                }
+            }
+            return diffDays < duration && !alert.isOpened;
+        }),
+        getAlertById: state => (id: number) => state.alerts.find((alert: any) => alert.id === id),
+        getAlertPositionAsArray: state => (alert: any) => [alert.longitude, alert.latitude],
+        getCategories: state => state.categories,
+        getAlertUI: state => (reporting: any) => {
+            for (let i = 0; i < state.categories.length; i++) {
+                for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                    if (state.categories[i].reportings[j].id === reporting){
                         return state.categories[i].reportings[j];
                     }
                 }
@@ -167,5 +209,57 @@ export const useAlertsStore = defineStore({
         getCategoryUI: state => (category: any) => state.categories.find((cat: any) => cat.id === category),
         getSelectCategory: state => state.selectCategory,
         categoryIsSelected: state => !!state.selectCategory,
+        isDurationExpired: state => (alert: any) => {
+            const now = new Date();
+            const alertDate = new Date(alert.created_at);
+            const diff = Math.abs(now.getTime() - alertDate.getTime());
+            const diffDays = Math.floor(diff / (1000 * 3600 * 24));
+            let duration = 0;
+            for (let i = 0; i < state.categories.length; i++) {
+                for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                    if (state.categories[i].reportings[j].id === alert.reporting) {
+                        duration = state.categories[i].reportings[j].duration;
+                    }
+                }
+            }
+            if(duration === -1) return false;
+            return diffDays > duration;
+        },
+        getTimeText: state => (alert: any) => {
+            const now = new Date();
+            const alertDate = new Date(alert.created_at);
+            const diff = Math.abs(now.getTime() - alertDate.getTime());
+            /* return "this text" -> il y a "this text" */
+            /* return day / hour / minute / quelques secondes / semaine / mois / année */
+            const diffYears = Math.floor(diff / (1000 * 3600 * 24 * 365));
+            const diffMonths = Math.floor(diff / (1000 * 3600 * 24 * 30));
+            const diffWeeks = Math.floor(diff / (1000 * 3600 * 24 * 7));
+            const diffDays = Math.floor(diff / (1000 * 3600 * 24));
+            const diffHours = Math.floor(diff / (1000 * 3600));
+            const diffMinutes = Math.floor(diff / (1000 * 60));
+            const diffSeconds = Math.floor(diff / (1000));
+            if (diffYears > 1) return diffYears + " ans";
+            if (diffYears === 1) return "un an";
+            if (diffMonths > 1) return diffMonths + " mois";
+            if (diffMonths === 1) return "un mois";
+            if (diffWeeks > 1) return diffWeeks + " semaines";
+            if (diffWeeks === 1) return "une semaine";
+            if (diffDays > 1) return diffDays + " jours";
+            if (diffDays === 1) return "un jour";
+            if (diffHours > 1) return diffHours + " heures";
+            if (diffHours === 1) return "une heure";
+            if (diffMinutes > 1) return diffMinutes + " minutes";
+            if (diffMinutes === 1) return "une minute";
+            if (diffSeconds > 1) return "quelques secondes";
+        },
+        isRecent: state => (alert: any) => {
+            // return true if alert est create il y a moins d'une heure
+            const now = new Date();
+            const alertDate = new Date(alert.created_at);
+            const diff = Math.abs(now.getTime() - alertDate.getTime());
+            const diffHours = Math.floor(diff / (1000 * 3600));
+            return diffHours < 1;
+        },
+        isAlreadyOpen: state => (alert: any) => alert.isOpened,
     },
 });

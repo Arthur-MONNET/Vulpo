@@ -9,12 +9,38 @@
     <MapFooter />
     <ReportingPopup />
     <MenuPopup />
+    <NotificationPopup />
   </div>
 </template>
 
 <script setup>
-import { useMapStore } from "../stores/map"
+import { usePopupStore } from "../stores/popup";
+import { useMapStore } from "../stores/map";
+import { useAlertsStore } from "../stores/alerts";
+
+const popupStore = usePopupStore();
 const mapStore = useMapStore();
+const alertsStore = useAlertsStore();
+
+onMounted(async () => {
+  alertsStore.$subscribe(async (mutations, state) => {
+    alertsStore.sortAlerts("created_at");
+    for (const alert of alertsStore.getAlerts) {
+      if (!alertsStore.isRecent(alert)) break;
+      if (!alertsStore.isAlreadyOpen(alert)) {
+        popupStore.closePopup("Notification");
+        await sleep(600);
+        popupStore.openPopup("Notification", alert);
+        alertsStore.setAlertAsOpen(alert);
+        break;
+      }
+    }
+  });
+});
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 </script>
 
 <style scoped>

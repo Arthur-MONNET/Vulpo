@@ -7,17 +7,19 @@ export const usePopupStore = defineStore({
     state: () => {
         return {
             popups: {} as any,
+            data : {} as any,
         };
     },
     actions: {
-        addPopup(popup: any, defaultState: boolean = false) {
+        addPopup(popup: any, defaultState: boolean = false, data: any = null) {
             this.popups[popup] = defaultState
+            this.data[popup] = data
         },
-        openPopup(popupName: string) {
+        openPopup(popupName: string, data: any = null) {
             this.popups[popupName] = true;
+            this.data[popupName] = data;
         },
         closePopup(popupName: string) {
-            console.log("CLOSE POPUP : ", popupName)
             this.popups[popupName] = false;
         },
         closeAllPopups() {
@@ -25,16 +27,15 @@ export const usePopupStore = defineStore({
         },
         closeAllPopupsExcept(popupName: string) {
             Object.keys(this.popups).forEach(popup => {
-                console.log(popup, popupName)
                 if (popup !== popupName) {
                     this.closePopup(popup)
                 }
             });
-            console.log(this.isPopupOpen(popupName))
         }
     },
     getters: {
         getPopups: state => state.popups,
+        getData: state => (popupName: string) => state.data[popupName],
         isPopupOpen: state => (popupName: string) => state.popups[popupName],
     },
 });

@@ -62,7 +62,6 @@ export const useMapStore = defineStore({
         focusOnByName(name: string) {
             const marker = this.markers.find(marker => marker.name === name);
             if (marker) {
-                console.log(marker.location)
                 this.focusOn(marker.location);
             }
         },
