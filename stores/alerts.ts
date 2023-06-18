@@ -270,6 +270,7 @@ export const useAlertsStore = defineStore({
             if (diffMinutes > 1) return diffMinutes + " minutes";
             if (diffMinutes === 1) return "une minute";
             if (diffSeconds > 1) return "quelques secondes";
+            return "quelques secondes";
         },
         isRecent: state => (alert: any) => {
             // return true if alert est create il y a moins d'une heure

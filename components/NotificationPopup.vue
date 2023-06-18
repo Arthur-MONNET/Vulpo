@@ -3,15 +3,13 @@
     class="notification-popup"
     :class="{ open: popupStore.isPopupOpen('Notification') }"
   >
-    <div class="notification-popup-left">
-      <i :class="popupStore.getData('Notification') ? alertsStore.getAlertUI(popupStore.getData('Notification').reporting).icon : ''"></i>
-    </div>
-    <div class="notification-popup-right">
-      <h3 class="notification-popup-right-title">{{ popupStore.getData('Notification') ? alertsStore.getAlertUI(popupStore.getData('Notification').reporting).title : '' }}</h3>
-      <div class="notification-popup-right-text">
-        Signalé il y a {{ popupStore.getData('Notification') ? alertsStore.getTimeText(popupStore.getData('Notification')) : '...' }}
-      </div>
-    </div>
+    <Notification 
+    :icon="popupStore.getData('Notification') ? alertsStore.getAlertUI(popupStore.getData('Notification').reporting).icon : ''"
+        :title="popupStore.getData('Notification') ? alertsStore.getAlertUI(popupStore.getData('Notification').reporting).title : ''"
+        :timeText="popupStore.getData('Notification') ? alertsStore.getTimeText(popupStore.getData('Notification')) :'...'"
+        :isOpened="true"
+        v-on:click="popupStore.getData('Notification') ? (alertsStore.setAlertAsOpen(popupStore.getData('Notification')), mapStore.focusOnByName(popupStore.getData('Notification').id), popupStore.closePopup('Notification')) : ''"
+    />
   </div>
 </template>
 
@@ -20,10 +18,13 @@ const { $ws } = useNuxtApp();
 import { usePopupStore } from "../stores/popup";
 import { useAlertsStore } from "../stores/alerts";
 import { useUserStore } from "../stores/user";
+import { useMapStore } from "../stores/map";
+
 
 const popupStore = usePopupStore();
 const alertsStore = useAlertsStore();
 const userStore = useUserStore();
+const mapStore = useMapStore();
 
 popupStore.addPopup("Notification");
 </script>

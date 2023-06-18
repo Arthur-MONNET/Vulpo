@@ -17,6 +17,7 @@ const { icon, title, timeText, isOpened } = defineProps({
   timeText: String,
   isOpened: Boolean,
 });
+
 </script>
 
 <style scoped>
