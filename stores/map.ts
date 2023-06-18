@@ -17,6 +17,7 @@ export const useMapStore = defineStore({
             this.mapboxgl = mapboxgl;
         },
         setMap(container: string, style: string, zoom: number) {
+            this.markers = [];
             return this.map = new this.mapboxgl.Map({
                 container,
                 style,
@@ -41,7 +42,7 @@ export const useMapStore = defineStore({
             } else {
                 marker.getElement().querySelectorAll("svg, i").forEach((element: any) => {
                     element.addEventListener("click", () => {
-                        this.focusOn(location)
+                        this.focusOn(location);
                     });
                 });
             }

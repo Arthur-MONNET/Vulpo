@@ -5,6 +5,13 @@
 // nuxt 3
 
 <script setup>
+const { lng, lat } = defineProps({
+  lng: String,
+  lat: String,
+});
+
+const longitude = lng ? parseFloat(lng) : null;
+const latitude = lat ? parseFloat(lat) : null;
 import { useUserStore } from "../stores/user";
 import { useAlertsStore } from "../stores/alerts";
 import { useMapStore } from "../stores/map";
@@ -19,50 +26,63 @@ onMounted(async () => {
     "mapbox://styles/zak74/clijz8k4j00do01pfe4jv1cn4",
     12
   );
+  alertsStore.sortAlerts("latitude");
+  createMarkers();
 
   // set alerts on map
 
   alertsStore.$subscribe((mutations, state) => {
-    if (alertsStore.getAlerts.length < 1) return;
-    if (alertsStore.getAlerts.length === mapStore.getMarkers.length - 1) return;
-    for (const alert of alertsStore.getAlerts) {
-      if (mapStore.findMarker(alert.id)) continue;
-      if (alert.status !== "marker") continue;
-      mapStore.addMarker(
-        alert.id,
-        alertsStore.getAlertPositionAsArray(alert),
-        alertsStore.generateHtmlMarker(alert)
-      );
-    }
+    createMarkers();
   });
   await waitForGeolocation();
+  console.log("geolocation found");
   navigator.geolocation.getCurrentPosition((position) => {
     userStore.setLocation({
       lat: position.coords.latitude,
       lng: position.coords.longitude,
     });
-    map.setCenter(userStore.getLocationAsArray);
-    if(mapStore.findMarker("user")) mapStore.removeMarker("user");
+    map.setCenter(lat && lng ? [lng, lat] : userStore.getLocationAsArray);
+    if (mapStore.findMarker("user")) mapStore.removeMarker("user");
     mapStore.addMarker(
       "user",
       userStore.getLocationAsArray,
       userStore.generateHtmlMarker()
     );
-    mapStore.focusOnByName("user", 14);
+    lat && lng ? mapStore.focusOn([lng, lat]) : mapStore.focusOnByName("user");
   });
 
   map.on("move", () => {
-    mapStore.setIsUserMarkerCentered()
+    mapStore.setIsUserMarkerCentered();
   });
 });
 
 const waitForGeolocation = () => {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(resolve, reject);
+    console.log("waiting for geolocation");
   });
 };
 
-
+const createMarkers = () => {
+  console.log("create markers");
+  if (alertsStore.getAlerts.length < 1) return;
+  if (alertsStore.getAlerts.length === mapStore.getMarkers.length - 1) return;
+  for (const alert of alertsStore.getAlerts) {
+    if (mapStore.findMarker(alert.id)) continue;
+    if (alert.status !== "marker") continue;
+    mapStore.addMarker(
+      alert.id,
+      alertsStore.getAlertPositionAsArray(alert),
+      alertsStore.generateHtmlMarker(alert)
+    );
+  }
+  for (const marker of mapStore.getMarkers) {
+    if (marker.name === "user") continue;
+    marker.marker.getElement().addEventListener("click", () => {
+      alertsStore.setAlertAsOpen(alertsStore.getAlertById(marker.name));
+    });
+  }
+};
 </script>
 
 <style scoped>

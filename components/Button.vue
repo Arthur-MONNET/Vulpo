@@ -31,6 +31,7 @@ const mapStore = useMapStore();
 function clickEvent() {
   switch (event) {
     case "GO_TO":
+      navigateTo("/" + target);
       break;
     case "OPEN_POPUP":
       popupStore.openPopup(target);

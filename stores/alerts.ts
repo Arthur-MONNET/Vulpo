@@ -194,7 +194,7 @@ export const useAlertsStore = defineStore({
             }
             return diffDays < duration && !alert.isOpened;
         }),
-        getAlertById: state => (id: number) => state.alerts.find((alert: any) => alert.id === id),
+        getAlertById: state => (id: any) => state.alerts.find((alert: any) => alert.id == id),
         getAlertPositionAsArray: state => (alert: any) => [alert.longitude, alert.latitude],
         getCategories: state => state.categories,
         getAlertUI: state => (reporting: any) => {
