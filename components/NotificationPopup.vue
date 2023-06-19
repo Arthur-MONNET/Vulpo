@@ -3,12 +3,58 @@
     class="notification-popup"
     :class="{ open: popupStore.isPopupOpen('Notification') }"
   >
-    <Notification 
-    :icon="popupStore.getData('Notification') ? alertsStore.getAlertUI(popupStore.getData('Notification').reporting).icon : ''"
-        :title="popupStore.getData('Notification') ? alertsStore.getAlertUI(popupStore.getData('Notification').reporting).title : ''"
-        :timeText="popupStore.getData('Notification') ? alertsStore.getTimeText(popupStore.getData('Notification')) :'...'"
-        :isOpened="true"
-        v-on:click="popupStore.getData('Notification') ? (alertsStore.setAlertAsOpen(popupStore.getData('Notification')), mapStore.focusOnByName(popupStore.getData('Notification').id), popupStore.closePopup('Notification')) : ''"
+    <Notification
+      :icon="
+        popupStore.getData('Notification')
+          ? popupStore.getData('Notification').status === 'marker'
+            ? alertsStore.getAlertUI(
+                popupStore.getData('Notification').reporting
+              ).icon
+            : alertsStore.getAlertUIBeacon(
+                popupStore.getData('Notification').reporting
+              ).icon
+          : ''
+      "
+      :title="
+        popupStore.getData('Notification')
+          ? popupStore.getData('Notification').status === 'marker'
+            ? alertsStore.getAlertUI(
+                popupStore.getData('Notification').reporting
+              ).title
+            : alertsStore.getAlertUIBeacon(
+                popupStore.getData('Notification').reporting
+              ).title
+          : ''
+      "
+      :timeText="
+        popupStore.getData('Notification')
+          ? alertsStore.getTimeText(popupStore.getData('Notification'))
+          : '...'
+      "
+      :isOpened="true"
+      :status="
+        popupStore.getData('Notification')
+          ? popupStore.getData('Notification').status
+          : ''
+      "
+      v-on:click="
+        popupStore.getData('Notification')
+          ? (alertsStore.setAlertAsOpen(popupStore.getData('Notification')),
+            popupStore.getData('Notification').status === 'marker'
+              ? mapStore.focusOnByName(popupStore.getData('Notification').id)
+              : navigateTo(
+                  '/explore/' +
+                    alertsStore.getAlertUIBeacon( popupStore.getData('Notification').reporting
+                    ).location +
+                    (alertsStore.getAlertUIBeacon( popupStore.getData('Notification').reporting
+                    ).isAnimals
+                      ? '/' + alertsStore.getAlertUIBeacon( popupStore.getData('Notification').reporting
+                    ).animal
+                      : '')
+                ),
+            popupStore.closePopup('Notification'))
+          : ''
+      "
     />
   </div>
 </template>
@@ -19,7 +65,6 @@ import { usePopupStore } from "../stores/popup";
 import { useAlertsStore } from "../stores/alerts";
 import { useUserStore } from "../stores/user";
 import { useMapStore } from "../stores/map";
-
 
 const popupStore = usePopupStore();
 const alertsStore = useAlertsStore();
@@ -32,7 +77,7 @@ popupStore.addPopup("Notification");
 <style scoped>
 .notification-popup {
   position: fixed;
-  top: 20px;
+  top: -80px;
   margin: auto;
   background-color: #3d4a5c;
   width: calc(100% - 40px);
@@ -41,7 +86,7 @@ popupStore.addPopup("Notification");
   overflow: hidden;
   z-index: 20;
   transition: transform 0.3s ease-in-out;
-  transform: translateY(calc(-100% - 24px));
+  transform: translateY(0);
   display: flex;
   flex-direction: row;
   justify-content: stretch;
@@ -86,6 +131,6 @@ popupStore.addPopup("Notification");
 
 <style>
 .notification-popup.open {
-  transform: translateY(0);
+  transform: translateY(calc(100% + 24px));
 }
 </style>

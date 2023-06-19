@@ -109,7 +109,7 @@ function sendAlert(reporting) {
 /* Signalement Popup */
 .reporting-popup {
   position: fixed;
-  bottom: 0;
+  bottom: -100%;
   left: 0;
   width: 100%;
   max-height: 100%;
@@ -119,7 +119,7 @@ function sendAlert(reporting) {
   overflow: hidden;
   z-index: 20;
   transition: transform 0.3s ease-in-out;
-  transform: translateY(100%);
+  transform: translateY(0%);
 }
 
 .reporting-popup-header {
@@ -231,6 +231,6 @@ function sendAlert(reporting) {
 
 <style>
 .reporting-popup.open {
-  transform: translateY(0%);
+  transform: translateY(-100%);
 }
 </style>

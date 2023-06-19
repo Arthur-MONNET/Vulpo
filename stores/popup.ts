@@ -16,10 +16,12 @@ export const usePopupStore = defineStore({
             this.data[popup] = data
         },
         openPopup(popupName: string, data: any = null) {
+            console.log("openPopup", popupName, data);
             this.popups[popupName] = true;
             this.data[popupName] = data;
         },
         closePopup(popupName: string) {
+            console.log("closePopup", popupName);
             this.popups[popupName] = false;
         },
         closeAllPopups() {

@@ -1,5 +1,8 @@
 <template>
-  <div class="notification" :class="isOpened ? '' : 'border-solid border-2 border-[#FFB526]'">
+  <div
+    class="notification"
+    :class="(isOpened ? '' : 'border-solid border-2 border-[#FFB526] ') + (status==='beacon-reconition' ? 'bg-[#FFB526]' : 'bg-[#3d4a5c]')"
+  >
     <div class="notification-left">
       <i :class="icon"></i>
     </div>
@@ -11,18 +14,19 @@
 </template>
 
 <script setup>
-const { icon, title, timeText, isOpened } = defineProps({
+const { icon, title, timeText, isOpened, status } = defineProps({
   icon: String,
   title: String,
   timeText: String,
   isOpened: Boolean,
+  status: String,
 });
 
+console.log(status);
 </script>
 
 <style scoped>
 .notification {
-  background-color: #3d4a5c;
   width: 100%;
   height: 80px;
   min-height: 80px;

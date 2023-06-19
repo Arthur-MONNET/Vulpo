@@ -29,7 +29,7 @@ popupStore.addPopup("Menu");
 .menu-popup {
   position: fixed;
   bottom: 0;
-  left: 0;
+  left: -100%;
   width: 90%;
   height:100%;
   padding: 24px;
@@ -41,7 +41,7 @@ popupStore.addPopup("Menu");
   overflow: hidden;
   z-index: 20;
   transition: transform 0.3s ease-in-out;
-  transform: translateX(-100%);
+  transform: translateX(0%);
 }
 
 .menu-popup-header {
@@ -74,6 +74,6 @@ popupStore.addPopup("Menu");
 
 <style>
 .menu-popup.open {
-  transform: translateX(0%);
+  transform: translateX(100%);
 }
 </style>

@@ -36,12 +36,6 @@ onMounted(() => {
     console.log("disconnected");
   };
   document.addEventListener("click", (e) => {
-    // récupérer l'objet cliqué,
-    // verifier si il possède une classe "<popupName>-popup"
-    // popupName = nom de property de l'objet popupStore.popups
-    // sinon verifier sur les parents si il possède une classe "<popupName>-popup"
-    // si oui, fermer toutes les popups exepté celle cliquée
-    // si non, fermer toutes les popups
     for (const popupName in popupStore.popups) {
       if (
         e.target.closest(`[class*=${popupName.toLocaleLowerCase()}-popup]`) ||

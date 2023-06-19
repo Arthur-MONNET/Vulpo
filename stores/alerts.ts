@@ -7,6 +7,56 @@ export const useAlertsStore = defineStore({
     state: () => {
         return {
             alerts: [] as any[],
+            beacons: [
+                {
+                    id: 1,
+                    title: "Cerf",
+                    page: "cerf",
+                    icon: "fas fa-deer",
+                    isAnimal: true,
+                    duration: 5,
+                },
+                {
+                    id: 2,
+                    title: "Coup de feu chasseur",
+                    page: "coup-de-feu-chasseur",
+                    icon: "fas fa-bullseye",
+                    isAnimal: false,
+                    duration: 1,
+                },
+                {
+                    id: 3,
+                    title: "Gelinotte des bois",
+                    page: "gelinotte-des-bois",
+                    icon: "fas fa-feather-alt",
+                    isAnimal: true,
+                    duration: 5,
+                },
+                {
+                    id: 4,
+                    title: "Loups",
+                    page: "loups",
+                    icon: "fas fa-paw",
+                    isAnimal: true,
+                    duration: 5,
+                },
+                {
+                    id: 5,
+                    title: "Moto cross",
+                    page: "moto-cross",
+                    icon: "fas fa-motorcycle",
+                    isAnimal: false,
+                    duration: 1,
+                },
+                {
+                    id: 6,
+                    title: "Renard",
+                    page: "renard",
+                    icon: "fas fa-fox",
+                    isAnimal: true,
+                    duration: 5,
+                },
+            ],
             categories: [
                 {
                     id: 1,
@@ -100,6 +150,15 @@ export const useAlertsStore = defineStore({
                 longitude: longitude,
                 latitude: latitude,
                 isOpened: isOpened,
+                status: "marker",
+            });
+        },
+        addBeaconAlert(reporting: any, location: any, isOpened = true) {
+            this.alerts.push({
+                reporting: reporting,
+                location: location,
+                isOpened: isOpened,
+                status: "beacon-reconition",
             });
         },
         setAlerts(alerts: any[]) {
@@ -155,18 +214,154 @@ export const useAlertsStore = defineStore({
             const diff = Math.abs(now.getTime() - alertDate.getTime());
             const diffDays = Math.floor(diff / (1000 * 3600 * 24));
             let duration = 0;
-            for (let i = 0; i < state.categories.length; i++) {
-                for (let j = 0; j < state.categories[i].reportings.length; j++) {
-                    if (state.categories[i].reportings[j].id === alert.reporting) {
-                        duration = state.categories[i].reportings[j].duration;
+            if (alert.status === "marker") {
+                for (let i = 0; i < state.categories.length; i++) {
+                    for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                        if (state.categories[i].reportings[j].id === alert.reporting) {
+                            duration = state.categories[i].reportings[j].duration;
+                        }
+                    }
+                }
+            } else if (alert.status === "beacon-reconition") {
+                for (let i = 0; i < state.beacons.length; i++) {
+                    if (state.beacons[i].id === alert.reporting) {
+                        duration = state.beacons[i].duration;
                     }
                 }
             }
             if (duration === -1) return true;
             return diffDays < duration;
         }),
-
+        getAlertsWithoutBeacon: state => state.alerts.filter((alert: any) => {
+            if (alert.status === "beacon-reconition") return false;
+            // return true if alert is not expired
+            const now = new Date();
+            const alertDate = new Date(alert.created_at);
+            const diff = Math.abs(now.getTime() - alertDate.getTime());
+            const diffDays = Math.floor(diff / (1000 * 3600 * 24));
+            let duration = 0;
+            if (alert.status === "marker") {
+                for (let i = 0; i < state.categories.length; i++) {
+                    for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                        if (state.categories[i].reportings[j].id === alert.reporting) {
+                            duration = state.categories[i].reportings[j].duration;
+                        }
+                    }
+                }
+            }
+            if (duration === -1) return true;
+            return diffDays < duration;
+        }),
+        getMostRecentAlertAndNotOpened: state => {
+            const alerts = state.alerts.filter((alert: any) => {
+                // return true if alert is not expired
+                const now = new Date();
+                const alertDate = new Date(alert.created_at);
+                const diff = Math.abs(now.getTime() - alertDate.getTime());
+                const diffDays = Math.floor(diff / (1000 * 3600 * 24));
+                let duration = 0;
+                if (alert.status === "beacon-reconition") {
+                    for (let i = 0; i < state.beacons.length; i++) {
+                        if (state.beacons[i].id === alert.reporting) {
+                            duration = state.beacons[i].duration;
+                        }
+                    }
+                } else if (alert.status === "marker") {
+                    for (let i = 0; i < state.categories.length; i++) {
+                        for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                            if (state.categories[i].reportings[j].id === alert.reporting) {
+                                duration = state.categories[i].reportings[j].duration;
+                            }
+                        }
+                    }
+                }
+                if (duration === -1) return true;
+                return diffDays < duration && !alert.isOpened;
+            })
+            if (alerts.length > 1) alerts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+            if (state.alerts.length === 0) return null;
+            return alerts[0];
+        },
         getAndSortAlertsBy: state => (prop: string) => {
+            let alerts = [...state.alerts];
+            if (alerts.length > 1) {
+                switch (prop) {
+                    case "latitude":
+                        alerts.sort((a, b) => b.latitude - a.latitude);
+                        break;
+                    case "created_at":
+                        alerts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+                        break;
+                    case "created_at_with_beacon_first":
+                        // récupération du son avec le status beacon-reconition le plus récent qui est un animal
+                        let beaconAlerts = alerts.filter((alert: any) => alert.status === "beacon-reconition");
+
+                        let mostRecentBeaconAlert = null;
+                        let mostRecentBeaconAlertNotAnimal = null;
+                        if (beaconAlerts) {
+                            const beaconAlertsAnimals = beaconAlerts.filter((alert: any) => {
+                                for (let i = 0; i < state.beacons.length; i++) {
+                                    if (state.beacons[i].id === alert.reporting && state.beacons[i].isAnimal) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            });
+                            if (beaconAlertsAnimals.length === 1) mostRecentBeaconAlert = beaconAlertsAnimals[0];
+                            else if (beaconAlertsAnimals.length > 1) mostRecentBeaconAlert = beaconAlertsAnimals.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+                            // récupération du dernier son avec le status beacon-reconition qui n'est pas un animal
+                            const beaconAlertsNotAnimals = beaconAlerts.filter((alert: any) => {
+                                for (let i = 0; i < state.beacons.length; i++) {
+                                    if (state.beacons[i].id === alert.reporting && !state.beacons[i].isAnimal) {
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            });
+                            if (beaconAlertsNotAnimals.length === 1) mostRecentBeaconAlertNotAnimal = beaconAlertsNotAnimals[0];
+                            else if (beaconAlertsNotAnimals.length > 1) mostRecentBeaconAlertNotAnimal = beaconAlertsNotAnimals.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+                        };
+                        // récupération des alertes marker et tri par date
+                        const markerAlerts = alerts.filter((alert: any) => alert.status === "marker");
+                        if (markerAlerts.length > 1) markerAlerts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+                        alerts = [];
+                        if (mostRecentBeaconAlert) alerts.push(mostRecentBeaconAlert);
+                        if (mostRecentBeaconAlertNotAnimal) alerts.push(mostRecentBeaconAlertNotAnimal);
+                        alerts = [...alerts, ...markerAlerts];
+                        break;
+                    default:
+                        alerts.sort((a, b) => b[prop] - a[prop]);
+                        break;
+                }
+            }
+            return alerts.filter((alert: any) => {
+                // return true if alert is not expired
+                const now = new Date();
+                const alertDate = new Date(alert.created_at);
+                const diff = Math.abs(now.getTime() - alertDate.getTime());
+                const diffDays = Math.floor(diff / (1000 * 3600 * 24));
+                let duration = 0;
+                if (alert.status === "marker") {
+                    for (let i = 0; i < state.categories.length; i++) {
+                        for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                            if (state.categories[i].reportings[j].id === alert.reporting) {
+                                duration = state.categories[i].reportings[j].duration;
+                            }
+                        }
+                    }
+                } else if (alert.status === "beacon-reconition") {
+                    for (let i = 0; i < state.beacons.length; i++) {
+                        if (state.beacons[i].id === alert.reporting) {
+                            duration = state.beacons[i].duration;
+                        }
+                    }
+                }
+
+                if (duration === -1) return true;
+                return diffDays < duration;
+            });
+        },
+        getAlertsWithoutBeaconAndSortBy: state => (prop: string) => {
             let alerts = [...state.alerts];
             switch (prop) {
                 case "latitude":
@@ -180,16 +375,19 @@ export const useAlertsStore = defineStore({
                     break;
             }
             return alerts.filter((alert: any) => {
+                if (alert.status === "beacon-reconition") return false;
                 // return true if alert is not expired
                 const now = new Date();
                 const alertDate = new Date(alert.created_at);
                 const diff = Math.abs(now.getTime() - alertDate.getTime());
                 const diffDays = Math.floor(diff / (1000 * 3600 * 24));
                 let duration = 0;
-                for (let i = 0; i < state.categories.length; i++) {
-                    for (let j = 0; j < state.categories[i].reportings.length; j++) {
-                        if (state.categories[i].reportings[j].id === alert.reporting) {
-                            duration = state.categories[i].reportings[j].duration;
+                if (alert.status === "marker") {
+                    for (let i = 0; i < state.categories.length; i++) {
+                        for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                            if (state.categories[i].reportings[j].id === alert.reporting) {
+                                duration = state.categories[i].reportings[j].duration;
+                            }
                         }
                     }
                 }
@@ -204,10 +402,18 @@ export const useAlertsStore = defineStore({
             const diff = Math.abs(now.getTime() - alertDate.getTime());
             const diffDays = Math.floor(diff / (1000 * 3600 * 24));
             let duration = 0;
-            for (let i = 0; i < state.categories.length; i++) {
-                for (let j = 0; j < state.categories[i].reportings.length; j++) {
-                    if (state.categories[i].reportings[j].id === alert.reporting) {
-                        duration = state.categories[i].reportings[j].duration;
+            if (alert.status === "marker") {
+                for (let i = 0; i < state.categories.length; i++) {
+                    for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                        if (state.categories[i].reportings[j].id === alert.reporting) {
+                            duration = state.categories[i].reportings[j].duration;
+                        }
+                    }
+                }
+            } else if (alert.status === "beacon-reconition") {
+                for (let i = 0; i < state.beacons.length; i++) {
+                    if (state.beacons[i].id === alert.reporting) {
+                        duration = state.beacons[i].duration;
                     }
                 }
             }
@@ -217,11 +423,20 @@ export const useAlertsStore = defineStore({
         getAlertPositionAsArray: state => (alert: any) => [alert.longitude, alert.latitude],
         getCategories: state => state.categories,
         getAlertUI: state => (reporting: any) => {
+            if (!reporting) return null;
             for (let i = 0; i < state.categories.length; i++) {
                 for (let j = 0; j < state.categories[i].reportings.length; j++) {
                     if (state.categories[i].reportings[j].id === reporting) {
                         return state.categories[i].reportings[j];
                     }
+                }
+            }
+        },
+        getAlertUIBeacon: state => (reporting: any) => {
+            if (!reporting) return null;
+            for (let i = 0; i < state.beacons.length; i++) {
+                if (state.beacons[i].id === reporting) {
+                    return state.beacons[i];
                 }
             }
         },
@@ -234,10 +449,18 @@ export const useAlertsStore = defineStore({
             const diff = Math.abs(now.getTime() - alertDate.getTime());
             const diffDays = Math.floor(diff / (1000 * 3600 * 24));
             let duration = 0;
-            for (let i = 0; i < state.categories.length; i++) {
-                for (let j = 0; j < state.categories[i].reportings.length; j++) {
-                    if (state.categories[i].reportings[j].id === alert.reporting) {
-                        duration = state.categories[i].reportings[j].duration;
+            if (alert.status === "marker") {
+                for (let i = 0; i < state.categories.length; i++) {
+                    for (let j = 0; j < state.categories[i].reportings.length; j++) {
+                        if (state.categories[i].reportings[j].id === alert.reporting) {
+                            duration = state.categories[i].reportings[j].duration;
+                        }
+                    }
+                }
+            } else if (alert.status === "beacon-reconition") {
+                for (let i = 0; i < state.beacons.length; i++) {
+                    if (state.beacons[i].id === alert.reporting) {
+                        duration = state.beacons[i].duration;
                     }
                 }
             }

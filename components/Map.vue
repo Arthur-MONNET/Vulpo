@@ -64,9 +64,9 @@ const waitForGeolocation = () => {
 
 const createMarkers = () => {
   console.log("create markers");
-  if (alertsStore.getAlerts.length < 1) return;
-  if (alertsStore.getAlerts.length === mapStore.getMarkers.length - 1) return;
-  for (const alert of alertsStore.getAndSortAlertsBy("latitude")) {
+  if (alertsStore.getAlertsWithoutBeacon.length === 0) return;
+  if (alertsStore.getAlertsWithoutBeacon.length === mapStore.getMarkers.length - 1) return;
+  for (const alert of alertsStore.getAlertsWithoutBeaconAndSortBy("latitude")) {
     if (mapStore.findMarker(alert.id)) continue;
     if (alert.status !== "marker") continue;
     mapStore.addMarker(
@@ -134,6 +134,7 @@ const createMarkers = () => {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
+  pointer-events: none !important;
 }
 
 .alert-marker i {
@@ -147,6 +148,7 @@ const createMarkers = () => {
   border-radius: 50%;
   border: #fff 2px solid;
   z-index: 20;
+  pointer-events: all;
 }
 
 .alert-marker svg {
@@ -154,10 +156,12 @@ const createMarkers = () => {
   height: 20px;
   display: flex;
   z-index: -1;
+  pointer-events: all;
 }
 
 .alert-marker svg path {
   width: 100%;
   height: 100%;
+  pointer-events: all;
 }
 </style>

@@ -18,27 +18,3 @@ const alertsStore = useAlertsStore();
 const mapStore = useMapStore();
 
 </script>
-
-<style>
-
-.after-nb-notifs::after {
-    position: absolute;
-    margin-bottom: 48px;
-    margin-right: 16px;
-    width: 16px;
-    height: 16px;
-    background-color: #FFB526;
-    color: #3D4A5C;
-    font-size: 10px;
-    font-weight: 700;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.no-after-nb-notifs::after {
-    display: none;
-}
-
-</style>

@@ -37,6 +37,7 @@ export const useMapStore = defineStore({
                 .addTo(this.map)
             if (name === "user") {
                 marker.getElement().addEventListener("click", () => {
+                    console.log("click");
                     this.focusOn(location)
                 });
             } else {
@@ -69,10 +70,10 @@ export const useMapStore = defineStore({
         setIsUserMarkerCentered() {
             if(this.findMarker("user")) {
                 const marker = this.markers.find(marker => marker.name === "user");
-                const markerLng = Math.round(marker.location[0] * 1000) / 1000;
-                const markerLat = Math.round(marker.location[1] * 1000) / 1000;
-                const mapLng = Math.round(this.map.getCenter().lng * 1000) / 1000;
-                const mapLat = Math.round(this.map.getCenter().lat * 1000) / 1000;
+                const markerLng = Math.round(marker.location[0] * 10000) / 10000;
+                const markerLat = Math.round(marker.location[1] * 10000) / 10000;
+                const mapLng = Math.round(this.map.getCenter().lng * 10000) / 10000;
+                const mapLat = Math.round(this.map.getCenter().lat * 10000) / 10000;
                 if(markerLng === mapLng && markerLat === mapLat) {
                     this.isUserMarkerCentered = true;
                 } else {

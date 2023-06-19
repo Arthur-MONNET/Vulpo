@@ -21,7 +21,6 @@
 const { title } = defineProps({
   title: String,
 });
-
 </script>
 
 <style scoped>
@@ -31,6 +30,7 @@ const { title } = defineProps({
   width: 100%;
   height: 56px;
   background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -51,6 +51,7 @@ const { title } = defineProps({
   display: flex;
   justify-content: center;
   align-items: center;
+  text-transform: uppercase;
 }
 
 .header-page-title-text {
@@ -58,5 +59,4 @@ const { title } = defineProps({
   font-weight: 700;
   color: #3d4a5c;
 }
-
 </style>
