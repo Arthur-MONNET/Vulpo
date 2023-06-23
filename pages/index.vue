@@ -3,8 +3,8 @@
     <NotificationPopup />
   </div>
   <img src="../assets/header.png" class="fixed top-0 left-0 w-full" />
-  <img src="../assets/Group 1448.png" class="top-0 left-0 w-full" />
-  <img src="../assets/BAR MENU.png" class="fixed bottom-0 left-0 w-full" />
+  <img src="../assets/Group_1448.png" class="top-0 left-0 w-full" />
+  <img src="../assets/BAR_MENU.png" class="fixed bottom-0 left-0 w-full" />
 </template>
 
 <script setup>
