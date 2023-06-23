@@ -9,7 +9,7 @@ export const useAlertsStore = defineStore({
             alerts: [] as any[],
             beacons: [
                 {
-                    id: 1,
+                    id: 2,
                     title: "Cerf",
                     page: "cerf",
                     icon: "fas fa-deer",
@@ -17,7 +17,7 @@ export const useAlertsStore = defineStore({
                     duration: 5,
                 },
                 {
-                    id: 2,
+                    id: 3,
                     title: "Coup de feu chasseur",
                     page: "coup-de-feu-chasseur",
                     icon: "fas fa-bullseye",
@@ -25,7 +25,7 @@ export const useAlertsStore = defineStore({
                     duration: 1,
                 },
                 {
-                    id: 3,
+                    id: 4,
                     title: "Gelinotte des bois",
                     page: "gelinotte-des-bois",
                     icon: "fas fa-feather-alt",
@@ -33,7 +33,7 @@ export const useAlertsStore = defineStore({
                     duration: 5,
                 },
                 {
-                    id: 4,
+                    id: 5,
                     title: "Loups",
                     page: "loups",
                     icon: "fas fa-paw",
@@ -41,7 +41,7 @@ export const useAlertsStore = defineStore({
                     duration: 5,
                 },
                 {
-                    id: 5,
+                    id: 6,
                     title: "Moto cross",
                     page: "moto-cross",
                     icon: "fas fa-motorcycle",
@@ -49,7 +49,7 @@ export const useAlertsStore = defineStore({
                     duration: 1,
                 },
                 {
-                    id: 6,
+                    id: 7,
                     title: "Renard",
                     page: "renard",
                     icon: "fas fa-fox",
