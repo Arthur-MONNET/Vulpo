@@ -61,3 +61,38 @@ function handleMessage({ data }) {
   }
 }
 </script>
+
+<style>
+
+/* font Goruts */
+@font-face {
+  font-family: "Goruts";
+  src: url("./assets/fonts/Goruts.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* font Outfit ./assets/fonts/Outfit-VariableFont_wght.ttf */
+@font-face {
+  font-family: "Outfit";
+  src: url("./assets/fonts/Outfit-VariableFont_wght.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Outfit";
+}
+
+html,
+body,
+#__nuxt,
+#__nuxt > div {
+  height: 100%;
+  width: 100%;
+}
+</style>
