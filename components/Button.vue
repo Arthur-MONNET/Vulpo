@@ -7,6 +7,7 @@
 <template>
   <button :class="styleTailwind" @click="clickEvent()" :data-event="event" :data-target="target">
     <i v-if="i" :class="`fa-${i} fa-${iType || 'solid'} pointer-events-none`"></i>
+    <img v-if="img" :src="`../assets/icons/${img}.svg`" :alt="img" :class="`pointer-events-none`" />
     <span v-if="text" :class="textStyleTailwind + ' pointer-events-none'">{{ text }}</span>
   </button>
 </template>
@@ -20,6 +21,7 @@ const { event, target, text, textStyleTailwind, i, iType, styleTailwind } =
     textStyleTailwind: String,
     i: String,
     iType: String,
+    img: String,
     styleTailwind: String,
   });
 
@@ -47,12 +49,22 @@ function clickEvent() {
 
 <style>
 .slide-in {
-  transform: translateX(-150%);
+  transform: translateX(0);
   transition: transform 0.1s ease-in-out;
 }
 
 .slide-out {
-  transform: translateX(0%);
+  transform: translateX(-58px);
+  transition: transform 0.3s ease-in-out;
+}
+
+.slide-in-2 {
+  transform: translateX(-296px);
+  transition: transform 0.1s ease-in-out;
+}
+
+.slide-out-2 {
+  transform: translateX(0);
   transition: transform 0.3s ease-in-out;
 }
 </style>

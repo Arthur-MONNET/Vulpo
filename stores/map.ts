@@ -1,5 +1,6 @@
 // stores/map.ts
 
+import { set } from "nuxt/dist/app/compat/capi";
 import { defineStore } from "pinia";
 
 export const useMapStore = defineStore({
@@ -8,6 +9,7 @@ export const useMapStore = defineStore({
         return {
             map: null as any,
             isUserMarkerCentered: false,
+            markerCentered: '',
             mapboxgl: null as any,
             markers: [] as any[],
         };
@@ -18,11 +20,17 @@ export const useMapStore = defineStore({
         },
         setMap(container: string, style: string, zoom: number) {
             this.markers = [];
-            return this.map = new this.mapboxgl.Map({
+            this.map = new this.mapboxgl.Map({
                 container,
                 style,
                 zoom,
+                pitchWithRotate: false,
             });
+            this.map.dragRotate.disable();
+
+            // disable map rotation using touch rotation gesture
+            this.map.touchZoomRotate.disableRotation();
+            return this.map;
         },
         removeMarker(name: string) {
             const marker = this.markers.find(marker => marker.name === name);
@@ -37,6 +45,11 @@ export const useMapStore = defineStore({
                 .addTo(this.map)
             if (name === "user") {
                 marker.getElement().addEventListener("click", () => {
+                    console.log("click");
+                    this.focusOn(location)
+                });
+            } else if (name === "zone_Semnoz") {
+                marker.getElement().querySelector("img").addEventListener("click", () => {
                     console.log("click");
                     this.focusOn(location)
                 });
@@ -58,7 +71,7 @@ export const useMapStore = defineStore({
         focusOn(location: any) {
             this.map.flyTo({
                 center: location,
-                zoom: 14,
+                zoom: 13.6,
             });
         },
         focusOnByName(name: string) {
@@ -68,13 +81,13 @@ export const useMapStore = defineStore({
             }
         },
         setIsUserMarkerCentered() {
-            if(this.findMarker("user")) {
+            if (this.findMarker("user")) {
                 const marker = this.markers.find(marker => marker.name === "user");
                 const markerLng = Math.round(marker.location[0] * 10000) / 10000;
                 const markerLat = Math.round(marker.location[1] * 10000) / 10000;
                 const mapLng = Math.round(this.map.getCenter().lng * 10000) / 10000;
                 const mapLat = Math.round(this.map.getCenter().lat * 10000) / 10000;
-                if(markerLng === mapLng && markerLat === mapLat) {
+                if (markerLng === mapLng && markerLat === mapLat) {
                     this.isUserMarkerCentered = true;
                 } else {
                     this.isUserMarkerCentered = false;
@@ -82,7 +95,22 @@ export const useMapStore = defineStore({
             } else {
                 this.isUserMarkerCentered = false;
             }
-        }
+        },
+        setIsMarkerCentered() {
+           for (const marker of this.markers) {
+               const markerLng = Math.round(marker.location[0] * 10000) / 10000;
+               const markerLat = Math.round(marker.location[1] * 10000) / 10000;
+               const mapLng = Math.round(this.map.getCenter().lng * 10000) / 10000;
+               const mapLat = Math.round(this.map.getCenter().lat * 10000) / 10000;
+               if (markerLng === mapLng && markerLat === mapLat) {
+                console.log(marker.name);
+                   this.markerCentered = marker.name;
+                   return;
+               }
+            }
+            this.markerCentered = '';
+        },
+        
     },
     getters: {
         getMap: state => state.map,
@@ -90,6 +118,14 @@ export const useMapStore = defineStore({
         getMarkers: state => state.markers,
         getMarker: state => (name: string) => state.markers.find(marker => marker.name === name)?.marker,
         getIsUserMarkerCentered: state => state.isUserMarkerCentered,
+        getIsMarkerCentered: state => (name: string) => {
+            if (state.markerCentered === name) {
+                console.log("true");
+                return true;
+            } else {
+                return false;
+            }
+        },
         findMarker: state => (name: string) => !!state.markers.find(marker => marker.name === name),
     },
 });

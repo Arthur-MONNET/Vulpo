@@ -129,13 +129,14 @@
     </div>
     <div class="h-[116px] w-full flex items-center justify-center px-[24px] z-10">
       <p
-        class="bg-[#FFB526] text-[#0B1519] h-[40px] rounded-[24px] flex items-center justify-center text-[16px] px-[20px] py-[10px] z-10"
+        class="bg-[#FFB526] text-[#0B1519] h-[40px] rounded-[24px] flex items-center justify-center text-[16px] px-[20px] py-[10px] z-10 pointer-events-none"
       >
         Accédez à la map
       </p>
       <img
         class="absolute rounded-[16px]"
         src="../assets/images/screen_map.png"
+        v-on:click="navigateTo('/map')"
       />
     </div>
     <div class="w-full h-[138px] flex flex-col justify-between z-10">
@@ -380,7 +381,7 @@
       class="flex flex-col items-center justify-center w-[90px] h-[56px] z-20"
     >
       <img
-        src="../assets/icons/GlobeHemisphereWest.svg"
+        src="../assets/icons/GlobeHemisphereWest_select.svg"
         alt="GlobeHemisphereWest"
         class="w-[32px] h-[32px]"
       />

@@ -1,5 +1,8 @@
 <template>
   <div id="map-container"></div>
+  <div class="zone">
+    <img src="../assets/images/forest_location.png" />
+  </div>
 </template>
 
 // nuxt 3
@@ -37,21 +40,46 @@ onMounted(async () => {
   console.log("geolocation found");
   navigator.geolocation.getCurrentPosition((position) => {
     userStore.setLocation({
-      lat: position.coords.latitude,
-      lng: position.coords.longitude,
+      lat: 45.771834 || position.coords.latitude,
+      lng: 6.114932 || position.coords.longitude,
     });
     map.setCenter(lat && lng ? [lng, lat] : userStore.getLocationAsArray);
     if (mapStore.findMarker("user")) mapStore.removeMarker("user");
+    mapStore.addMarker(
+      "zone_Semnoz",
+      [6.110293, 45.774923],
+      document.querySelector(".zone")
+    );
     mapStore.addMarker(
       "user",
       userStore.getLocationAsArray,
       userStore.generateHtmlMarker()
     );
+   
     lat && lng ? mapStore.focusOn([lng, lat]) : mapStore.focusOnByName("user");
   });
-
+  // set zoom 11
+  
+  map.on("zoom", () => {
+    const zoom = map.getZoom();
+    const scale = 33 * 1/(window.devicePixelRatio * 40075016.686 / (256 * Math.pow(2, zoom)));
+    const alerts_marker = document.querySelectorAll(".alert-marker");
+    alerts_marker.forEach((alert_marker) => {
+      // si on est trop dézoomé, on cache les markers
+      if (map.getZoom() < 8) {
+        alert_marker.style.display = "none";
+      } else {
+        alert_marker.style.display = "block";
+      }
+    });
+    const zones = document.querySelectorAll(".zone");
+    zones.forEach((zone) => {
+      zone.querySelector("img").style.transform = `scale(${scale})`;
+    });
+  });
   map.on("move", () => {
     mapStore.setIsUserMarkerCentered();
+    mapStore.setIsMarkerCentered();
   });
 });
 
@@ -65,7 +93,11 @@ const waitForGeolocation = () => {
 const createMarkers = () => {
   console.log("create markers");
   if (alertsStore.getAlertsWithoutBeacon.length === 0) return;
-  if (alertsStore.getAlertsWithoutBeacon.length === mapStore.getMarkers.length - 1) return;
+  if (
+    alertsStore.getAlertsWithoutBeacon.length ===
+    mapStore.getMarkers.length - 1
+  )
+    return;
   for (const alert of alertsStore.getAlertsWithoutBeaconAndSortBy("latitude")) {
     if (mapStore.findMarker(alert.id)) continue;
     if (alert.status !== "marker") continue;
@@ -82,35 +114,26 @@ const createMarkers = () => {
     });
   }
 };
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 </script>
 
 <style scoped>
 #map-container {
   width: 100%;
   height: calc(100vh + 160px);
-  margin: -100px 0 -60px;
+  margin: -80px 0 -80px;
 }
 </style>
 
 <style>
 .user-marker {
-  width: 28px;
-  height: 28px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
-  background-color: transparent;
-  border: 2px solid #0b81af;
-}
-
-.user-marker::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #158de9;
-  transform: translate(-50%, -50%);
+  background-color: #ffc24c;
 }
 
 .user-marker::before {
@@ -118,10 +141,10 @@ const createMarkers = () => {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background-color: #26a1ff99;
+  background-color: #ffc34d4d;
   transform: translate(-50%, -50%);
 }
 
@@ -163,5 +186,16 @@ const createMarkers = () => {
   width: 100%;
   height: 100%;
   pointer-events: all;
+}
+
+.zone {
+  display: none;
+  position: absolute;
+  mix-blend-mode: color-dodge;
+  pointer-events: all;
+  filter: opacity(0.8);
+}
+.zone.mapboxgl-marker {
+  display: block;
 }
 </style>
