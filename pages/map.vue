@@ -70,7 +70,7 @@
       class="absolute w-full h-full backdrop-filter bg-[#1D251E] bg-opacity-30 backdrop-blur-[50px] rounded-tl-[24px] rounded-tr-[24px] z-10"
     ></div>
     <div
-      class="absolute w-full h-[186px] bg-gradient-to-t from-[#1D251E] to-transparent"
+      class="absolute w-full h-[186px] bg-gradient-to-t from-[#1D251E] to-transparent pointer-events-none"
     ></div>
   </div>
     <ReportingPopup />
