@@ -34,6 +34,10 @@ onMounted(async () => {
   // set alerts on map
 
   alertsStore.$subscribe((mutations, state) => {
+    console.log(mutations);
+    if(mutations.events.key === "alerts" && mutations.events.oldValue.length === mutations.events.newValue.length) {
+      return;
+    }
     createMarkers();
   });
   await waitForGeolocation();

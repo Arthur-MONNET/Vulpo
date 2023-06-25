@@ -16,8 +16,8 @@
       <div class="flex flex-row items-center justify-between gap-[22px] w-min">
         <img src="../assets/images/Fox.png" alt="Fox" class="h-[100%] w-[auto]"/>
         <div class="flex flex-col items-start justify-center">
-          <p class="text-[#F0F7F1] text-[26px] font-[Goruts] uppercase leading-[26px]">Renard</p>
-          <p class="text-[#79957C] text-[14px]">il y a 2 minutes</p>
+          <p class="text-[#F0F7F1] text-[26px] font-[Goruts] uppercase leading-[26px] whitespace-nowrap">{{ alertsStore.alerts.length > 0 ? alertsStore.getAlertUIBeacon(alertsStore.alerts[alertsStore.alerts.length - 1]?.reporting).title : "" }}</p>
+          <p class="text-[#79957C] text-[14px] whitespace-nowrap">{{ alertsStore.alerts.length > 0 ? alertsStore.getTimeText(alertsStore.alerts[alertsStore.alerts.length - 1]) : "" }}</p>
         </div>
       </div>
       <!-- <img src="../assets/icons/Close.svg" alt="Close" class="absolute top-[13px] right-[13px] h-[12px] w-[12px]"/> -->
@@ -28,6 +28,7 @@
   >
     <div
       class="flex flex-col items-center justify-center w-[90px] h-[56px] z-20"
+      v-on:click="navigateTo('/')"
     >
       <img
         src="../assets/icons/GlobeHemisphereWest.svg"
@@ -92,7 +93,7 @@ const alertsStore = useAlertsStore();
 
 onMounted(async () => {
   alertsStore.$subscribe(async (mutations, state) => {
-    const alert = alertsStore.getMostRecentAlertAndNotOpened;
+    const alert = alertsStore.getNewAlert;
     if (!alert) return;
     if (popupStore.getData("Notification")) {
       if (alert.id == popupStore.getData("Notification").id) return;
@@ -100,6 +101,8 @@ onMounted(async () => {
     popupStore.closePopup("Notification");
     await sleep(600);
     popupStore.openPopup("Notification", alert);
+    await sleep(6000);
+    popupStore.closePopup("Notification");
   });
 });
 

@@ -283,7 +283,7 @@
       </div>
     </div>
     <div class="w-full h-[272px] flex flex-col justify-between z-10">
-      <p class="text-[#F0F7F1] px-[24px] text-[24px]">Les plus proches</p>
+      <p class="text-[#F0F7F1] px-[24px] text-[24px]">Les mieux notés</p>
       <div
         class="w-full h-[226px] flex flex-row items-center justify-start gap-[16px] overflow-auto px-[24px]"
       >
@@ -399,6 +399,7 @@
     </div>
     <div
       class="flex flex-col items-center justify-center w-[90px] h-[56px] z-20"
+      v-on:click="navigateTo('/map')"
     >
       <img
         src="../assets/icons/MapPin.svg"
@@ -435,19 +436,17 @@ const alertsStore = useAlertsStore();
 
 onMounted(async () => {
   alertsStore.$subscribe(async (mutations, state) => {
-    const alert = alertsStore.getMostRecentAlertAndNotOpened;
+    const alert = alertsStore.getNewAlert;
     if (!alert) return;
     if (popupStore.getData("Notification")) {
       if (alert.id == popupStore.getData("Notification").id) return;
     }
     popupStore.closePopup("Notification");
     await sleep(600);
+    console.log(alert)
     popupStore.openPopup("Notification", alert);
-
-    if (alert.status === "beacon-reconition") {
-      await sleep(6000);
-      popupStore.closePopup("Notification");
-    }
+    await sleep(6000);
+    popupStore.closePopup("Notification");
   });
 });
 

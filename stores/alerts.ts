@@ -10,6 +10,7 @@ export const useAlertsStore = defineStore({
             beacons: [
                 {
                     id: 1,
+                    text: "Un cerf a été entendu",
                     title: "Cerf",
                     page: "cerf",
                     icon: "fas fa-deer",
@@ -18,6 +19,7 @@ export const useAlertsStore = defineStore({
                 },
                 {
                     id: 2,
+                    text: "Attention, coup de feu entendu",
                     title: "Coup de feu chasseur",
                     page: "coup-de-feu-chasseur",
                     icon: "fas fa-bullseye",
@@ -26,14 +28,16 @@ export const useAlertsStore = defineStore({
                 },
                 {
                     id: 3,
-                    title: "Loups",
-                    page: "loups",
+                    text: "Un loup a été entendu",
+                    title: "Loup",
+                    page: "loup",
                     icon: "fas fa-paw",
                     isAnimal: true,
                     duration: 5,
                 },
                 {
                     id: 4,
+                    text: "Une moto cross a été entendue",
                     title: "Moto cross",
                     page: "moto-cross",
                     icon: "fas fa-motorcycle",
@@ -42,6 +46,7 @@ export const useAlertsStore = defineStore({
                 },
                 {
                     id: 6,
+                    text: "Un renard a été entendu",
                     title: "Renard",
                     page: "renard",
                     icon: "fas fa-fox",
@@ -244,35 +249,16 @@ export const useAlertsStore = defineStore({
             if (duration === -1) return true;
             return diffDays < duration;
         }),
-        getMostRecentAlertAndNotOpened: state => {
-            const alerts = state.alerts.filter((alert: any) => {
-                // return true if alert is not expired
+        getNewAlert: state => {
+            const newestAlertBeacon = state.alerts.filter((alert: any) => alert.status === "beacon-reconition").sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+            // si l'alerte a un createdAt datant de moins de 1 minute
+            if (newestAlertBeacon) {
                 const now = new Date();
-                const alertDate = new Date(alert.created_at);
+                const alertDate = new Date(newestAlertBeacon.created_at);
                 const diff = Math.abs(now.getTime() - alertDate.getTime());
-                const diffDays = Math.floor(diff / (1000 * 3600 * 24));
-                let duration = 0;
-                if (alert.status === "beacon-reconition") {
-                    for (let i = 0; i < state.beacons.length; i++) {
-                        if (state.beacons[i].id === alert.reporting) {
-                            duration = state.beacons[i].duration;
-                        }
-                    }
-                } else if (alert.status === "marker") {
-                    for (let i = 0; i < state.categories.length; i++) {
-                        for (let j = 0; j < state.categories[i].reportings.length; j++) {
-                            if (state.categories[i].reportings[j].id === alert.reporting) {
-                                duration = state.categories[i].reportings[j].duration;
-                            }
-                        }
-                    }
-                }
-                if (duration === -1) return true;
-                return diffDays < duration && !alert.isOpened;
-            })
-            if (alerts.length > 1) alerts.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-            if (state.alerts.length === 0) return null;
-            return alerts[0];
+                const diffMinutes = Math.floor(diff / (1000 * 60));
+                if (diffMinutes < 1 && !newestAlertBeacon.isOpened) return newestAlertBeacon;
+            }
         },
         getAndSortAlertsBy: state => (prop: string) => {
             let alerts = [...state.alerts];
@@ -425,9 +411,11 @@ export const useAlertsStore = defineStore({
             }
         },
         getAlertUIBeacon: state => (reporting: any) => {
+            console.log("getAlertUIBeacon", reporting);
             if (!reporting) return null;
             for (let i = 0; i < state.beacons.length; i++) {
                 if (state.beacons[i].id === reporting) {
+                    console.log("return getAlertUIBeacon", state.beacons[i]);
                     return state.beacons[i];
                 }
             }
@@ -472,20 +460,20 @@ export const useAlertsStore = defineStore({
             const diffHours = Math.floor(diff / (1000 * 3600));
             const diffMinutes = Math.floor(diff / (1000 * 60));
             const diffSeconds = Math.floor(diff / (1000));
-            if (diffYears > 1) return diffYears + " ans";
-            if (diffYears === 1) return "un an";
-            if (diffMonths > 1) return diffMonths + " mois";
-            if (diffMonths === 1) return "un mois";
-            if (diffWeeks > 1) return diffWeeks + " semaines";
-            if (diffWeeks === 1) return "une semaine";
-            if (diffDays > 1) return diffDays + " jours";
-            if (diffDays === 1) return "un jour";
-            if (diffHours > 1) return diffHours + " heures";
-            if (diffHours === 1) return "une heure";
-            if (diffMinutes > 1) return diffMinutes + " minutes";
-            if (diffMinutes === 1) return "une minute";
-            if (diffSeconds > 1) return "quelques secondes";
-            return "quelques secondes";
+            if (diffYears > 1) return "Il y a " + diffYears + " ans";
+            if (diffYears === 1) return "Il y a un an";
+            if (diffMonths > 1) return "Il y a " + diffMonths + " mois";
+            if (diffMonths === 1) return "Il y a un mois";
+            if (diffWeeks > 1) return "Il y a " + diffWeeks + " semaines";
+            if (diffWeeks === 1) return "Il y a une semaine";
+            if (diffDays > 1) return "Il y a " + diffDays + " jours";
+            if (diffDays === 1) return "Il y a un jour";
+            if (diffHours > 1) return "Il y a " + diffHours + " heures";
+            if (diffHours === 1) return "Il y a une heure";
+            if (diffMinutes > 1) return "Il y a " + diffMinutes + " minutes";
+            if (diffMinutes === 1) return "Il y a une minute";
+            if (diffSeconds > 30) return "Il y a quelques secondes";
+            return "A l'instant";
         },
         isRecent: state => (alert: any) => {
             // return true if alert est create il y a moins d'une heure

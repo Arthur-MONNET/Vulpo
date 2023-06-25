@@ -1,76 +1,32 @@
 <template>
   <div
-    class="notification"
-    :class="(isOpened ? '' : 'border-solid border-2 border-[#FFB526] ') + (status==='beacon-reconition' ? 'bg-[#FFB526]' : 'bg-[#3d4a5c]')"
+    class="notification flex flex-col items-strech justify-between w-full h-full px-[15px] py-[12px] bg-[#282828] rounded-[8px] shadow-[0px 0px 10px rgba(0, 0, 0, 0.2)]"
   >
-    <div class="notification-left">
-      <i :class="icon"></i>
+    <div class="notification-top flex flex-row items-center justify-between">
+      <div class="flex flex-row items-center justify-start gap-[6px]">
+        <img
+          src="../assets/icons/AppVulpo.svg"
+          alt="AppVulpo"
+          class="w-[24px] h-[24px]"
+        />
+        <p class="text-[#FFFFFF8F] text-[SF Pro Text] text-[14px] uppercase">
+          Vulpo
+        </p>
+      </div>
+      <p class="text-[#FFFFFF8F] text-[SF Pro Text] text-[14px]">
+        {{ timeText || "maintenant" }}
+      </p>
     </div>
-    <div class="notification-right">
-      <h3 class="notification-right-title">{{ title }}</h3>
-      <div class="notification-right-text">Il y a {{ timeText }}</div>
-    </div>
+    <p class="text-white text-[SF Pro Text] text-[17px] text-bold">
+      {{ text || "" }}
+    </p>
   </div>
 </template>
 
 <script setup>
-const { icon, title, timeText, isOpened, status } = defineProps({
-  icon: String,
-  title: String,
+const { timeText, text } = defineProps({
   timeText: String,
-  isOpened: Boolean,
-  status: String,
+  text: String,
 });
 
-console.log(status);
 </script>
-
-<style scoped>
-.notification {
-  width: 100%;
-  height: 80px;
-  min-height: 80px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
-  display: flex;
-  flex-direction: row;
-  justify-content: stretch;
-  align-items: stretch;
-  border-radius: 8px;
-}
-
-.notification .notification-left {
-  position: relative;
-  height: 100%;
-  aspect-ratio: 1/1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: rgb(0, 0, 0);
-  background-color: rgb(255, 255, 255);
-}
-
-.notification .notification-right {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0 24px;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.notification .notification-right-title {
-  font-size: 16px;
-  font-weight: 700;
-  pointer-events: none;
-}
-
-.notification .notification-right-text {
-  font-size: 12px;
-  font-weight: 400;
-  color: rgb(0, 0, 0);
-  pointer-events: none;
-}
-</style>

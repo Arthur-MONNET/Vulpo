@@ -80,6 +80,20 @@ function handleMessage({ data }) {
   font-style: normal;
 }
 
+/* font SF Pro Text bold and medium */
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("./assets/fonts/SF-Pro-Text-Bold.otf");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "SF Pro Text";
+  src: url("./assets/fonts/SF-Pro-Text-Medium.otf");
+  font-weight: medium;
+  font-style: normal;
+}
 
 * {
   margin: 0;
