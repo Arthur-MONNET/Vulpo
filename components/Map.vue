@@ -35,9 +35,15 @@ onMounted(async () => {
 
   alertsStore.$subscribe((mutations, state) => {
     console.log(mutations);
-    if(mutations.events.key === "alerts" && mutations.events.oldValue.length === mutations.events.newValue.length) {
-      return;
+    if (mutations.events) {
+      if (
+        mutations.events.key === "alerts" &&
+        mutations.events.oldValue.length === mutations.events.newValue.length
+      ) {
+        return;
+      }
     }
+
     createMarkers();
   });
   await waitForGeolocation();
@@ -59,14 +65,16 @@ onMounted(async () => {
       userStore.getLocationAsArray,
       userStore.generateHtmlMarker()
     );
-   
+
     lat && lng ? mapStore.focusOn([lng, lat]) : mapStore.focusOnByName("user");
   });
   // set zoom 11
-  
+
   map.on("zoom", () => {
     const zoom = map.getZoom();
-    const scale = 33 * 1/(window.devicePixelRatio * 40075016.686 / (256 * Math.pow(2, zoom)));
+    const scale =
+      (33 * 1) /
+      ((window.devicePixelRatio * 40075016.686) / (256 * Math.pow(2, zoom)));
     const alerts_marker = document.querySelectorAll(".alert-marker");
     alerts_marker.forEach((alert_marker) => {
       // si on est trop dézoomé, on cache les markers
