@@ -3,6 +3,12 @@
   <div class="zone">
     <img src="../assets/images/forest_location.png" />
   </div>
+  <div class="marker-animal w-0 h-0 flex items-end">
+    <img src="../assets/icons/MarkerAnimal.svg" class="bottom-0 left-0 min-w-[32px] min-h-[32px]"/>
+  </div>
+  <div class="marker-canicule w-0 h-0 flex items-end">
+    <img src="../assets/icons/MarkerCanicule.svg" class="bottom-0 left-0 min-w-[32px] min-h-[32px]"/>
+  </div>
 </template>
 
 // nuxt 3
@@ -61,6 +67,16 @@ onMounted(async () => {
       document.querySelector(".zone")
     );
     mapStore.addMarker(
+      "animal_blesse",
+      [6.190606,45.891490],
+      document.querySelector(".marker-animal")
+    );
+    mapStore.addMarker(
+      "canicule",
+      [6.109447, 45.782528],
+      document.querySelector(".marker-canicule")
+    );
+    mapStore.addMarker(
       "user",
       userStore.getLocationAsArray,
       userStore.generateHtmlMarker()
@@ -75,14 +91,15 @@ onMounted(async () => {
     const scale =
       (33 * 1) /
       ((window.devicePixelRatio * 40075016.686) / (256 * Math.pow(2, zoom)));
-    const alerts_marker = document.querySelectorAll(".alert-marker");
+    const alerts_marker = document.querySelectorAll(".alert-marker, .marker-animal, .marker-canicule");
     alerts_marker.forEach((alert_marker) => {
       // si on est trop dézoomé, on cache les markers
       if (map.getZoom() < 8) {
         alert_marker.style.display = "none";
       } else {
-        alert_marker.style.display = "block";
+        alert_marker.style.display = "flex";
       }
+
     });
     const zones = document.querySelectorAll(".zone");
     zones.forEach((zone) => {
