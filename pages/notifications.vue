@@ -53,7 +53,7 @@
             <img class="w-[24px] h-[22px]" src="../assets/icons/Animal.svg" />
             <div class="flex flex-col items-start justify-center">
               <p class="text-[#F0F7F1] text-[18px] leading-[18px]">Renard</p>
-              <p class="text-[#A7B9A8] text-[8px]">Il y a 1 minute</p>
+              <p class="text-[#A7B9A8] text-[8px]">{{ alertsStore.alerts.length > 0 ? alertsStore.getTimeText(alertsStore.alerts[0]) : "il y a 1 heure"}}</p>
             </div>
           </div>
         </div>
