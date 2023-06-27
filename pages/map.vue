@@ -36,8 +36,8 @@
     >
       <div class="flex flex-row items-center justify-between gap-[22px] w-min">
         <img
-          src="../assets/images/Fox.png"
-          alt="Fox"
+          src="../assets/icons/AnimalCircle.svg"
+          alt="AnimalCircle"
           class="h-[100%] w-[auto]"
         />
         <div class="flex flex-col items-start justify-center">
@@ -49,7 +49,7 @@
                 ? alertsStore.getAlertUIBeacon(
                     alertsStore.alerts[alertsStore.alerts.length - 1]?.reporting
                   ).title
-                : ""
+                : "Renard"
             }}
           </p>
           <p class="text-[#79957C] text-[14px] whitespace-nowrap">
@@ -58,7 +58,7 @@
                 ? alertsStore.getTimeText(
                     alertsStore.alerts[alertsStore.alerts.length - 1]
                   )
-                : ""
+                : "A l'instant"
             }}
           </p>
         </div>
@@ -72,8 +72,8 @@
     >
       <div class="flex flex-row items-center justify-between gap-[22px] w-min">
         <img
-          src="../assets/images/Fox.png"
-          alt="Fox"
+          src="../assets/icons/ThermometreCircle.svg"
+          alt="ThermometreCircle"
           class="h-[100%] w-[auto]"
         />
         <div class="flex flex-col items-start justify-center">
@@ -92,12 +92,36 @@
     <div
       class="fixed top-[60px] right-[-272px] h-[92px] w-[272px] bg-[#1D251E66] rounded-[16px] px-[22px] py-[16px] backdrop-filter backdrop-blur-[50px]"
       :class="
+        mapStore.getIsMarkerCentered('arbre') ? 'slide-in-2' : 'slide-out-2'"
+    >
+      <div class="flex flex-row items-center justify-between gap-[22px] w-min">
+        <img
+          src="../assets/icons/ArbreCircle.svg"
+          alt="ArbreCircle"
+          class="h-[100%] w-[auto]"
+        />
+        <div class="flex flex-col items-start justify-center">
+          <p
+            class="text-[#F0F7F1] text-[23px] font-[Goruts] uppercase leading-[26px] whitespace-nowrap"
+          >
+            Arbre tombé
+          </p>
+          <p class="text-[#79957C] text-[14px] whitespace-nowrap">
+            A l'instant
+          </p>
+        </div>
+      </div>
+      <!-- <img src="../assets/icons/Close.svg" alt="Close" class="absolute top-[13px] right-[13px] h-[12px] w-[12px]"/> -->
+    </div>
+    <div
+      class="fixed top-[60px] right-[-272px] h-[92px] w-[272px] bg-[#1D251E66] rounded-[16px] px-[22px] py-[16px] backdrop-filter backdrop-blur-[50px]"
+      :class="
         mapStore.getIsMarkerCentered('animal_blesse') ? 'slide-in-2' : 'slide-out-2'"
     >
       <div class="flex flex-row items-center justify-between gap-[22px] w-min">
         <img
-          src="../assets/images/Fox.png"
-          alt="Fox"
+          src="../assets/icons/AnimalCircle.svg"
+          alt="AnimalCircle"
           class="h-[100%] w-[auto]"
         />
         <div class="flex flex-col items-start justify-center">

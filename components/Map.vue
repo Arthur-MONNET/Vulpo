@@ -9,6 +9,9 @@
   <div class="marker-canicule w-0 h-0 flex items-end">
     <img src="../assets/icons/MarkerCanicule.svg" class="bottom-0 left-0 min-w-[32px] min-h-[32px]"/>
   </div>
+  <div class="marker-arbre w-0 h-0 flex items-end">
+    <img src="../assets/icons/MarkerArbre.svg" class="bottom-0 left-0 min-w-[32px] min-h-[32px]"/>
+  </div>
 </template>
 
 // nuxt 3
@@ -77,6 +80,11 @@ onMounted(async () => {
       document.querySelector(".marker-canicule")
     );
     mapStore.addMarker(
+      "arbre",
+      [6.114050, 45.772627],
+      document.querySelector(".marker-arbre")
+    );
+    mapStore.addMarker(
       "user",
       userStore.getLocationAsArray,
       userStore.generateHtmlMarker()
@@ -91,7 +99,7 @@ onMounted(async () => {
     const scale =
       (33 * 1) /
       ((window.devicePixelRatio * 40075016.686) / (256 * Math.pow(2, zoom)));
-    const alerts_marker = document.querySelectorAll(".alert-marker, .marker-animal, .marker-canicule");
+    const alerts_marker = document.querySelectorAll(".alert-marker, .marker-animal, .marker-canicule, .marker-arbre");
     alerts_marker.forEach((alert_marker) => {
       // si on est trop dézoomé, on cache les markers
       if (map.getZoom() < 8) {

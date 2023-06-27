@@ -48,7 +48,7 @@ export const useMapStore = defineStore({
                     console.log("click");
                     this.focusOn(location)
                 });
-            } else if (["zone_Semnoz","animal_blesse","canicule"].includes(name)) {
+            } else if (["zone_Semnoz","animal_blesse","canicule","arbre"].includes(name)) {
                 marker.getElement().querySelector("img").addEventListener("click", () => {
                     console.log("click");
                     this.focusOn(location)
