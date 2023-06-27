@@ -59,7 +59,7 @@
                   ).title
                 : "Renard"
             }}</p>
-              <p class="text-[#A7B9A8] text-[8px]">{{ alertsStore.alerts.length > 0 ? alertsStore.getTimeText(alertsStore.alerts[0]) : "il y a 1 heure"}}</p>
+              <p class="text-[#A7B9A8] text-[8px]">{{ alertsStore.alerts.length > 0 ? alertsStore.getTimeText(alertsStore.alerts[alertsStore.alerts.length - 1]) : "il y a 1 heure"}}</p>
             </div>
           </div>
         </div>
