@@ -54,26 +54,26 @@ The project structure is organized as follows:
 
 ## Installation
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/Arthur-MONNET/Vulpo.git
-    ```
+```bash
+git clone https://github.com/Arthur-MONNET/Vulpo.git
+```
 2. Install the dependencies:
-    ```bash
-    cd Vulpo
-    npm install
-    ```
+```bash
+cd Vulpo
+npm install
+```
 3. Set up environment variables:
 Create a .env file in the root directory of the project and define the following variables:
-    ```bash
-    WS_HOST=your_websocket_host
-    MAPBOX_TOKEN=your_mapbox_token
-    ```
+```bash
+WS_HOST=your_websocket_host
+MAPBOX_TOKEN=your_mapbox_token
+```
     
 ## Usage
 1. Run the project:
-    ```bash
-    npm run dev
-    ```
+```bash
+npm run dev
+```
 2. Open your browser and visit http://localhost:3000 to view the application.
 
 ## Dependencies
